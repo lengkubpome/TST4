@@ -13,6 +13,7 @@ import { WeightLoadingService } from './weight-loading.service';
 
 import { StoreModule } from '@ngrx/store';
 import { weightLoadingReducer } from './weight-loading.reducer';
+import { BottomSheetNoteComponent } from './shared/bottom-sheet-note.component';
 
 const routes: Routes = [
   { path: '', component: WeightLoadingComponent }
@@ -25,6 +26,7 @@ const routes: Routes = [
     PastWeightLoadingComponent,
     WeightLoadingInComponent,
     WeightLoadingOutComponent,
+    BottomSheetNoteComponent
   ],
   imports: [
     ReactiveFormsModule,
@@ -37,6 +39,6 @@ const routes: Routes = [
     WeightLoadingService
   ],
   exports: [],
-  entryComponents: [WeightLoadingInComponent, WeightLoadingOutComponent]
+  entryComponents: [WeightLoadingInComponent, WeightLoadingOutComponent , BottomSheetNoteComponent]
 })
 export class WeightLoadingModule { }

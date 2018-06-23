@@ -9,7 +9,7 @@
 
         <div class="end" fxLayoutGap="10px">
           <button mat-icon-button type="button" class="note">
-            <mat-icon matBadge="!" matBadgeColor="warn">note</mat-icon>
+            <mat-icon matBadge="!" matBadgeColor="warn" (click)="onShowNoteDetail()">note</mat-icon>
           </button>
 
           <button mat-icon-button type="button" [matMenuTriggerFor]="menu">
@@ -84,7 +84,7 @@
 
           <div fxLayout="row">
             <mat-form-field fxFlex="60%">
-              <input matInput type="number" placeholder="ปริมาณ" formControlName="cutWeightInput">
+              <input matInput type="number" placeholder="ปริมาณ" #x formControlName="cutWeightInput">
             </mat-form-field>
 
             <mat-form-field fxFlex="40%">
@@ -97,12 +97,12 @@
           <div fxLayout="row" fxLayoutAlign="space-between end">
             <mat-form-field fxFlex="60%">
               <input matInput type="text" placeholder="หมายเหตุ" formControlName="cutWeightNote">
-              <mat-error *ngIf="weightLoadingOutForm.get('cutWeightInput').value === 0">
+              <mat-error *ngIf="weightLoadingOutForm.get('cutWeightInput').value > 0">
                 Email is
                 <strong>required</strong>
               </mat-error>
             </mat-form-field>
-            <button mat-button color="warn" (click)="onCancelCutWeight()">ยกเลิก</button>
+            <button mat-button color="warn" (click)="onResetCutWeight()">ลบ</button>
 
           </div>
 

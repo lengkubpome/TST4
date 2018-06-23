@@ -2,10 +2,12 @@ import { Product, Dummy_Product } from './../product.model';
 import { FormGroup, Validators, FormControl, FormBuilder } from '@angular/forms';
 import { Weighting } from './../weighting.model';
 import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA, MatBottomSheet } from '@angular/material';
 import { Observable } from 'rxjs';
 import { WeightLoadingService } from '../weight-loading.service';
 import { startWith, map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { BottomSheetNoteComponent } from '../shared/bottom-sheet-note.component';
+import { not } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'tst-weight-loading-out',
@@ -19,6 +21,7 @@ export class WeightLoadingOutComponent implements OnInit {
   price = 0;
   totalWeight = 0;
   cutWeight = 0;
+  noteDetail = { note1: '', note2: '' };
 
   showComment: false;
 
@@ -31,6 +34,7 @@ export class WeightLoadingOutComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<WeightLoadingOutComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder,
+    private noteBottomSheet: MatBottomSheet,
     private weightLoadingService: WeightLoadingService
   ) {
     this.products = Dummy_Product;
@@ -118,7 +122,8 @@ export class WeightLoadingOutComponent implements OnInit {
     this.weightLoadingOutForm.get('cutWeight').setValue(this.cutWeight);
 
     if (this.cutWeight !== 0) {
-      console.log('หักน้ำหนัก ' + Math.abs(this.cutWeight) + 'กก. (' + value + ' ' + unit + ') เนื่องจาก' + note );
+      this.noteDetail.note2 = 'เพิ่มเติม: หักสิ่งเจือปน ' +
+        Math.abs(this.cutWeight) + ' หน่วย (' + value + ' ' + unit + ') เนื่องจาก' + note;
 
     }
 
@@ -144,10 +149,13 @@ export class WeightLoadingOutComponent implements OnInit {
 
   }
 
-  onCancelCutWeight() {
+  onResetCutWeight() {
     this.cutWeight = 0;
     this.showCutWeight = false;
+    this.noteDetail.note2 = '';
     this.weightLoadingOutForm.get('cutWeightInput').setValue(0);
+    this.weightLoadingOutForm.get('cutWeightNote').setValue(this.noteDetail.note2);
+
 
   }
 
@@ -155,6 +163,24 @@ export class WeightLoadingOutComponent implements OnInit {
     return this.products.filter(product =>
       product.name.indexOf(val) > -1 ||
       product.id.toString() === val);
+  }
+
+  onShowNoteDetail(): void {
+    const noteDetailRef = this.noteBottomSheet.open(BottomSheetNoteComponent, {
+      disableClose: true,
+      data: {
+        note1: this.noteDetail.note1,
+        note2: this.noteDetail.note2
+      }
+    });
+
+    noteDetailRef.afterDismissed().subscribe(note => {
+      if (note !== false) {
+
+        this.noteDetail = note;
+      }
+
+    });
   }
 
 
