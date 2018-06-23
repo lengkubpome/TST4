@@ -1,0 +1,153 @@
+<section>
+  <form [formGroup]="weightLoadingOutForm" #f="ngForm" (ngSubmit)="onSubmit()">
+
+    <div mat-dialog-title fxlayout="column">
+      <div class="header" fxlayout="row" fxLayoutAlign="space-between center">
+        <div>
+          <span>ชั่งรถออก</span>
+        </div>
+
+        <div class="end" fxLayoutGap="10px">
+          <button mat-icon-button type="button" class="note">
+            <mat-icon matBadge="!" matBadgeColor="warn">note</mat-icon>
+          </button>
+
+          <button mat-icon-button type="button" [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item>
+              <mat-icon>edit</mat-icon>
+              <span>แก้ไขข้อมูล</span>
+            </button>
+            <button mat-menu-item>
+              <mat-icon>build</mat-icon>
+              <span>ตั้งค่าการชั่ง</span>
+            </button>
+          </mat-menu>
+        </div>
+      </div>
+
+
+    </div>
+
+    <mat-dialog-content fxLayout="column">
+      <div>
+        <h4 mat-subheader>รายละเอียดการชั่ง</h4>
+        <div fxLayout.gt-sm="row" fxLayout.xs="column">
+          <mat-form-field fxFlex>
+            <input matInput type="text" placeholder="ทะเบียนรถ" formControlName="car">
+            <mat-error>กรุณาใส่ทะเบียนรถ</mat-error>
+          </mat-form-field>
+          <mat-form-field fxFlex>
+            <input matInput type="text" placeholder="ลูกค้า" formControlName="customer">
+          </mat-form-field>
+        </div>
+      </div>
+
+
+      <div>
+        <div fxLayout="row">
+          <mat-form-field fxFlex="50%">
+            <input matInput type="text" placeholder="สินค้า" formControlName="product" [matAutocomplete]="auto">
+            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+              <mat-option *ngFor="let product of filteredProducts | async" [value]="product.name">
+                <span>{{ product.id }}</span> &nbsp; {{ product.name }}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-error>กรุณาเลือกรายการสินค้า</mat-error>
+          </mat-form-field>
+
+          <mat-form-field fxFlex="50%">
+            <input matInput type="number" placeholder="ราคา" step="0.01" formControlName="price">
+            <mat-error *ngIf="weightLoadingOutForm.get('price').errors">
+              Email is
+              <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+
+        </div>
+
+        <div fxLayout="row" fxLayoutAlign="end center">
+          <button mat-button color="warn" fxFlexAlign="start" *ngIf="!showCutWeight" (click)="showCutWeight = true">
+            หักสิ่งเจือปน
+          </button>
+        </div>
+
+
+        <!-- หักสิ่งเจือปน -->
+        <div class="cut-weight-field" fxLayout="column" *ngIf="showCutWeight">
+          <div fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+            <h4>หักสิ่งเจือปน</h4>
+          </div>
+
+          <div fxLayout="row">
+            <mat-form-field fxFlex="60%">
+              <input matInput type="number" placeholder="ปริมาณ" formControlName="cutWeightInput">
+            </mat-form-field>
+
+            <mat-form-field fxFlex="40%">
+              <mat-select formControlName="cutWeightTypeUnit">
+                <mat-option value="kg">กิโลกรัม</mat-option>
+                <mat-option value="%">เปอร์เซ็นต์</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="space-between end">
+            <mat-form-field fxFlex="60%">
+              <input matInput type="text" placeholder="หมายเหตุ" formControlName="cutWeightNote">
+              <mat-error *ngIf="weightLoadingOutForm.get('cutWeightInput').value === 0">
+                Email is
+                <strong>required</strong>
+              </mat-error>
+            </mat-form-field>
+            <button mat-button color="warn" (click)="onCancelCutWeight()">ยกเลิก</button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <h4>ข้อมูลน้ำหนัก (กิโลกรัม)</h4>
+      <div class="weight-field">
+        <label>น้ำหนักเข้า</label>
+        <input type="number" formControlName="weightIn">
+      </div>
+      <div class="weight-field weight-field-focus">
+        <label>น้ำหนักออก</label>
+        <input type="number" formControlName="weightOut">
+      </div>
+
+      <div class="weight-field weight-field-alert" *ngIf="cutWeight != 0">
+        <label>หักน้ำหนัก</label>
+        <input type="number" formControlName="cutWeight">
+      </div>
+
+      <div class="weight-field weight-field-bold">
+        <label>น้ำหนักสุทธิ</label>
+        <input type="number" formControlName="totalWeight">
+      </div>
+
+      <h4>คำนวณเงิน (บาท)</h4>
+      <div class="amount-field">
+        <label> {{totalWeight |number: '1.'}} ✕ {{ price | number: '1.2-2'}}</label>
+        <input type="number" formControlName="amount">
+      </div>
+
+    </mat-dialog-content>
+    <mat-divider></mat-divider>
+    <mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center">
+
+      <div fxFlex>
+        <button mat-button type="button" [mat-dialog-close]="false" color="error">ยกเลิก</button>
+      </div>
+
+      <div fxFlex fxLayout fxLayoutAlign="flex-end">
+        <button mat-raised-button type="submit" class="save" color="primary" cdkFocusInitial [disabled]="!weightLoadingOutForm.valid">บันทึกข้อมูล</button>
+      </div>
+
+    </mat-dialog-actions>
+  </form>
+</section>

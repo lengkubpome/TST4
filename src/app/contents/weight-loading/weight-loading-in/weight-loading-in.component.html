@@ -1,0 +1,51 @@
+<section>
+  <form [formGroup]="weightLoadingInForm" #f="ngForm" (ngSubmit)="onSubmit()" >
+
+    <h2 mat-dialog-title>ชั่งรถเข้า</h2>
+    <mat-dialog-content fxLayout="column">
+
+      <h4>รายละเอียด</h4>
+      <mat-form-field>
+        <input matInput type="text" placeholder="ทะเบียนรถ" formControlName="car" >
+        <mat-error>กรุณาใส่ทะเบียนรถ</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput type="text" placeholder="ลูกค้า" formControlName="customer">
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput type="text" placeholder="สินค้า"
+        formControlName="product"
+        [matAutocomplete]="auto">
+        <mat-autocomplete autoActiveFirstOption
+          #auto="matAutocomplete">
+            <mat-option *ngFor="let product of filteredProducts | async" [value]="product.name">
+                <span>{{ product.id }}</span> &nbsp;
+              {{ product.name }}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error>กรุณาเลือกรายการสินค้า</mat-error>
+      </mat-form-field>
+
+
+      <h4>ข้อมูลน้ำหนัก (หน่วย: กิโลกรัม)</h4>
+      <div class="weight-field weight-field-focus" >
+        <label >น้ำหนักเข้า</label>
+        <input type="text" formControlName="weightIn">
+      </div>
+
+      <!-- {{ dateWeightIn | date:'medium'}} -->
+
+    </mat-dialog-content>
+    <mat-divider></mat-divider>
+    <mat-dialog-actions fxLayout="row">
+
+      <button mat-button type="button" [mat-dialog-close]="false" color="error">ยกเลิก</button>
+
+      <div fxFlex fxLayout fxLayoutAlign="flex-end" fxLayoutGap="10px">
+        <button mat-raised-button type="submit" class="save" cdkFocusInitial [disabled]="!f.valid">บันทึกข้อมูล</button>
+      </div>
+
+    </mat-dialog-actions>
+  </form>
+</section>

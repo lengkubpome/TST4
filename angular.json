@@ -7,7 +7,7 @@
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
-      "prefix": "app",
+      "prefix": "tst",
       "schematics": {},
       "architect": {
         "build": {
@@ -118,5 +118,10 @@
       }
     }
   },
-  "defaultProject": "TSTAPP4"
+  "defaultProject": "TSTAPP4",
+  "schematics": {
+    "@schematics/angular:component": {
+      "styleext": "scss"
+    }
+  }
 }

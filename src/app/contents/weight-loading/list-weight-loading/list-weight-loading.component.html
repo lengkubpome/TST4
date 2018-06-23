@@ -1,0 +1,48 @@
+<div fxLayout="column" fxLayoutGap="15px">
+  <div fxLayout="row">
+    <button mat-raised-button color="accent"
+     (click)="onRecordWeightLoadingIn()">น้ำหนัก</button>
+
+    <div fxFlex fxLayout fxLayoutAlign="flex-end" fxLayoutGap="10px">
+      <button mat-icon-button>
+        <mat-icon>search</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- <mat-divider fxHide.xs></mat-divider> -->
+
+
+  <mat-table [dataSource]="dataSource" matSort class="" >
+
+    <ng-container matColumnDef="car">
+      <mat-header-cell *matHeaderCellDef mat-sort-header > ทะเบียนรถ </mat-header-cell>
+      <mat-cell *matCellDef="let element" > {{element.car}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="dateLoadIn">
+      <mat-header-cell *matHeaderCellDef mat-sort-header fxLayoutAlign="center center"  > ช่วงเวลารถเข้า </mat-header-cell>
+      <mat-cell *matCellDef="let element" fxLayoutAlign="center center" > {{element.dateLoadIn | date:'medium'}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="product">
+      <mat-header-cell *matHeaderCellDef mat-sort-header fxLayoutAlign="center center"> สินค้า </mat-header-cell>
+      <mat-cell *matCellDef="let element" fxLayoutAlign="center center"> {{element.product}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="weightIn">
+      <mat-header-cell *matHeaderCellDef fxHide.xs fxLayoutAlign="space-evenly center"> น้ำหนักเข้า </mat-header-cell>
+      <mat-cell *matCellDef="let element" fxHide.xs fxLayoutAlign="space-evenly center"> {{element.weightIn | number}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="recorder">
+      <mat-header-cell *matHeaderCellDef fxHide.xs fxLayoutAlign="space-evenly center"> ผู้ชั่งน้ำหนัก </mat-header-cell>
+      <mat-cell *matCellDef="let element" fxHide.xs fxLayoutAlign="space-evenly center"> {{element.recorder}} </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"
+      (click)="onRecordWeightLoadingOut(row)"></mat-row>
+  </mat-table>
+
+</div>

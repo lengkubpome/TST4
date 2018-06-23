@@ -1,0 +1,136 @@
+h4 {
+  margin: 0.75em 0;
+}
+
+.mat-dialog-title {
+  margin: 0;
+  .header {
+    background: rgb(1, 159, 173);
+    margin: -24px -24px 0 -24px;
+    padding: 12px 24px;
+    color: white;
+    .end {
+      margin-right: -10px;
+    }
+  }
+  .weight-loading {
+    background: #3f51b5;
+    margin: 0 -24px 0 -24px;
+    padding: 10px 24px;
+    font-size: 14px;
+  }
+}
+
+mat-dialog-actions {
+  bottom: 0;
+}
+
+mat-divider {
+  margin: 0 -24px;
+}
+
+.input-right {
+  font-size: 24px;
+  text-align: right;
+  color: #3f51b5;
+}
+
+.mat-form-field-appearance-fill .mat-form-field-flex {
+  border-radius: 4px;
+  padding: .75em .75em 0 .75em;
+}
+
+.weight-field {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 4px;
+  padding: 1.75em;
+  margin: 0.3em 0;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  &:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+  label {
+    display: block;
+    width: 200px;
+  }
+  input {
+    width: 100%;
+    font-size: 24px;
+    text-align: right;
+    border: 0;
+    background: rgba(0, 0, 0, 0);
+    outline: none;
+  }
+}
+
+.weight-field-focus {
+  color: #3f51b5; // border: 2px solid #3f51b5;
+  input {
+    color: #3f51b5;
+  }
+}
+
+.weight-field-alert {
+  color: #f44336;
+  input {
+    color: #f44336;
+  }
+}
+
+.weight-field-bold {
+  font-weight: bold; // border: 2px solid #3f51b5;
+  input {
+    font-weight: bold;
+  }
+}
+
+.amount-field {
+  font-weight: bold;
+  color: #3f51b5;
+  border: 2px solid #3f51b5;
+  background: rgba(0, 17, 255, 0.05);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 4px;
+  padding: 1.75em;
+  margin: 0.3em 0 1em 0;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  label {
+    display: block;
+    width: 200px;
+  }
+  input {
+    width: 100%;
+    font-size: 24px;
+    text-align: right;
+    border: 0;
+    background: rgba(0, 0, 0, 0);
+    outline: none;
+    color: #3f51b5;
+    font-weight: bold;
+  }
+  &:hover {
+    background: rgba(0, 17, 255, 0.05);
+  }
+}
+
+.cut-weight-field {
+  background: rgba(0, 0, 0, 0.03); // border: 3px solid #ccc;
+  border-radius: 4px;
+  padding: 1em 0.75em;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+
+  &:hover {
+    background: rgba(255, 0, 0, 0.05); // color: #f44336;
+  }
+}
