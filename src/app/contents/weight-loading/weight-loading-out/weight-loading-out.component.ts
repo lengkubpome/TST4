@@ -16,14 +16,13 @@ import { not } from '@angular/compiler/src/output/output_ast';
 })
 export class WeightLoadingOutComponent implements OnInit {
 
-  showCutWeight: false;
+  showCutWeight: boolean;
 
   price = 0;
   totalWeight = 0;
   cutWeight = 0;
   noteDetail = { note1: '', note2: '' };
-
-  showComment: false;
+  notes: Note[] = [];
 
   weightLoading: Weighting;
 
@@ -48,7 +47,8 @@ export class WeightLoadingOutComponent implements OnInit {
       customer: [{ value: this.weightLoading.customer, disabled: true }],
       product: [{ value: this.weightLoading.product, disabled: false }, Validators.required],
       price: [{ value: this.weightLoading.price, disabled: false },
-      Validators.compose([Validators.required,])],
+      Validators.compose([Validators.required])],
+      type: [{ value: 'buy', disabled: false }],
       weightIn: [{ value: this.weightLoading.weightIn, disabled: true }],
       weightOut: [{ value: 1000, disabled: true }],
       cutWeight: [{ value: 0, disabled: true }],
@@ -66,6 +66,17 @@ export class WeightLoadingOutComponent implements OnInit {
       startWith(''),
       map(product => product ? this.filterProducts(product) : this.products.slice())
     );
+
+    // Type Change
+    this.weightLoadingOutForm.get('type').valueChanges
+      .subscribe(value => {
+        if (value === 'sell') {
+          this.showCutWeight = false;
+          this.onResetCutWeight();
+        } else {
+          this.showCutWeight = this.showCutWeight;
+        }
+      });
 
     // Price Change
     this.weightLoadingOutForm.get('price').valueChanges
@@ -90,6 +101,7 @@ export class WeightLoadingOutComponent implements OnInit {
         distinctUntilChanged()
       )
       .subscribe(() => this.calculateCutWeight());
+
     // Cut Weight Note Change
     this.weightLoadingOutForm.get('cutWeightNote').valueChanges
       .pipe(
@@ -122,11 +134,13 @@ export class WeightLoadingOutComponent implements OnInit {
     this.weightLoadingOutForm.get('cutWeight').setValue(this.cutWeight);
 
     if (this.cutWeight !== 0) {
-      this.noteDetail.note2 = 'เพิ่มเติม: หักสิ่งเจือปน ' +
+      const noteCutWeight = 'หักสิ่งเจือปน ' +
         Math.abs(this.cutWeight) + ' หน่วย (' + value + ' ' + unit + ') เนื่องจาก' + note;
 
-    }
+      this.notes = this.notes.filter(res => res.type !== 'cutWeight');
+      this.notes.push({ type: 'cutWeight', value: noteCutWeight });
 
+    }
     this.calculateWeightLoading();
 
   }
@@ -149,15 +163,19 @@ export class WeightLoadingOutComponent implements OnInit {
 
   }
 
+
   onResetCutWeight() {
     this.cutWeight = 0;
     this.showCutWeight = false;
-    this.noteDetail.note2 = '';
+
+    this.notes = this.notes.filter(note => note.type !== 'cutWeight');
+
     this.weightLoadingOutForm.get('cutWeightInput').setValue(0);
-    this.weightLoadingOutForm.get('cutWeightNote').setValue(this.noteDetail.note2);
+    this.weightLoadingOutForm.get('cutWeightNote').setValue('');
 
 
   }
+
 
   filterProducts(val: any): Product[] {
     return this.products.filter(product =>
@@ -169,18 +187,19 @@ export class WeightLoadingOutComponent implements OnInit {
     const noteDetailRef = this.noteBottomSheet.open(BottomSheetNoteComponent, {
       disableClose: true,
       data: {
-        note1: this.noteDetail.note1,
-        note2: this.noteDetail.note2
+        notes: this.notes
       }
     });
 
     noteDetailRef.afterDismissed().subscribe(note => {
       if (note !== false) {
-
-        this.noteDetail = note;
+        this.notes = note;
       }
 
+      console.log(this.notes);
+
     });
+
   }
 
 
@@ -189,4 +208,10 @@ export class WeightLoadingOutComponent implements OnInit {
 
   }
 
+}
+
+
+interface Note {
+  type: string;
+  value: string;
 }

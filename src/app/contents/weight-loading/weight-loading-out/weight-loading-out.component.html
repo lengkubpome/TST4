@@ -2,14 +2,17 @@
   <form [formGroup]="weightLoadingOutForm" #f="ngForm" (ngSubmit)="onSubmit()">
 
     <div mat-dialog-title fxlayout="column">
-      <div class="header" fxlayout="row" fxLayoutAlign="space-between center">
+      <div class="header"
+        [ngClass]="{'sell-mode':btnGroup.value === 'sell'}"
+        fxlayout="row" fxLayoutAlign="space-between center">
         <div>
           <span>ชั่งรถออก</span>
         </div>
 
         <div class="end" fxLayoutGap="10px">
           <button mat-icon-button type="button" class="note">
-            <mat-icon matBadge="!" matBadgeColor="warn" (click)="onShowNoteDetail()">note</mat-icon>
+            <mat-icon [matBadge]="notes.length" matBadgeColor="warn" [matBadgeHidden]="notes.length === 0" (click)="onShowNoteDetail()">note</mat-icon>
+
           </button>
 
           <button mat-icon-button type="button" [matMenuTriggerFor]="menu">
@@ -34,7 +37,15 @@
 
     <mat-dialog-content fxLayout="column">
       <div>
-        <h4 mat-subheader>รายละเอียดการชั่ง</h4>
+
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+          <div fxFlex>
+            <h4 mat-subheader>รายละเอียดการชั่ง</h4>
+          </div>
+
+
+        </div>
+
         <div fxLayout.gt-sm="row" fxLayout.xs="column">
           <mat-form-field fxFlex>
             <input matInput type="text" placeholder="ทะเบียนรถ" formControlName="car">
@@ -44,10 +55,7 @@
             <input matInput type="text" placeholder="ลูกค้า" formControlName="customer">
           </mat-form-field>
         </div>
-      </div>
 
-
-      <div>
         <div fxLayout="row">
           <mat-form-field fxFlex="50%">
             <input matInput type="text" placeholder="สินค้า" formControlName="product" [matAutocomplete]="auto">
@@ -68,17 +76,27 @@
           </mat-form-field>
 
         </div>
+        <!-- Tpye Weight Loading -->
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+          <div fxFlex fxLayout>
+            <mat-button-toggle-group #btnGroup="matButtonToggleGroup" formControlName="type">
+              <mat-button-toggle class="buy" value="buy">ซื้อเข้า</mat-button-toggle>
+              <mat-button-toggle class="sell" value="sell" >ขายออก</mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+          <div fxFlex fxLayout fxLayoutAlign="flex-end">
+            <button mat-button color="warn" fxFlexAlign="start" *ngIf="!showCutWeight && btnGroup.value !='sell'" (click)="showCutWeight = true">
+              หักสิ่งเจือปน
+            </button>
+          </div>
 
-        <div fxLayout="row" fxLayoutAlign="end center">
-          <button mat-button color="warn" fxFlexAlign="start" *ngIf="!showCutWeight" (click)="showCutWeight = true">
-            หักสิ่งเจือปน
-          </button>
         </div>
 
 
         <!-- หักสิ่งเจือปน -->
-        <div class="cut-weight-field" fxLayout="column" *ngIf="showCutWeight">
+        <div class="cut-weight-field" fxLayout="column" *ngIf="showCutWeight ">
           <div fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
             <h4>หักสิ่งเจือปน</h4>
           </div>
 
@@ -97,10 +115,10 @@
           <div fxLayout="row" fxLayoutAlign="space-between end">
             <mat-form-field fxFlex="60%">
               <input matInput type="text" placeholder="หมายเหตุ" formControlName="cutWeightNote">
-              <mat-error *ngIf="weightLoadingOutForm.get('cutWeightInput').value > 0">
+              <!-- <mat-error *ngIf="weightLoadingOutForm.get('cutWeightInput').value > 0">
                 Email is
                 <strong>required</strong>
-              </mat-error>
+              </mat-error> -->
             </mat-form-field>
             <button mat-button color="warn" (click)="onResetCutWeight()">ลบ</button>
 
@@ -145,7 +163,7 @@
       </div>
 
       <div fxFlex fxLayout fxLayoutAlign="flex-end">
-        <button mat-raised-button type="submit" class="save" color="primary" cdkFocusInitial [disabled]="!weightLoadingOutForm.valid">บันทึกข้อมูล</button>
+        <button mat-raised-button type="submit" class="save" color="primary" [ngClass]="{'sell-mode':btnGroup.value === 'sell'}" cdkFocusInitial [disabled]="!weightLoadingOutForm.valid">บันทึกข้อมูล</button>
       </div>
 
     </mat-dialog-actions>

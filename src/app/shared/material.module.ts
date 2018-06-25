@@ -57,7 +57,8 @@ import {
     MatSelectModule,
     MatExpansionModule,
     MatBadgeModule,
-    MatBottomSheetModule
+    MatBottomSheetModule,
+    MatButtonToggleModule
   ],
   exports: [
     MatButtonModule,
@@ -86,7 +87,8 @@ import {
     MatSelectModule,
     MatExpansionModule,
     MatBadgeModule,
-    MatBottomSheetModule
+    MatBottomSheetModule,
+    MatButtonToggleModule
   ]
 })
 export class MaterialModule { }
