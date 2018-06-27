@@ -1,41 +1,89 @@
 <section>
-  <form [formGroup]="weightLoadingInForm" #f="ngForm" (ngSubmit)="onSubmit()" >
+  <form [formGroup]="weightLoadingInForm" (ngSubmit)="onSubmit()">
 
-    <h2 mat-dialog-title>ชั่งรถเข้า</h2>
-    <mat-dialog-content fxLayout="column">
+    <div mat-dialog-title fxlayout="column">
+      <div class="header"
+        [ngClass]="{'sell-mode':btnGroup.value === 'sell'}"
+        fxlayout="row" fxLayoutAlign="space-between center">
+        <div>
+          <span>ชั่งรถเข้า</span>
+        </div>
 
-      <h4>รายละเอียด</h4>
-      <mat-form-field>
-        <input matInput type="text" placeholder="ทะเบียนรถ" formControlName="car" >
-        <mat-error>กรุณาใส่ทะเบียนรถ</mat-error>
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput type="text" placeholder="ลูกค้า" formControlName="customer">
-      </mat-form-field>
+        <div class="end" fxLayoutGap="10px">
+          <button mat-icon-button type="button" class="note">
+            <mat-icon [matBadge]="notes.length" matBadgeColor="warn" [matBadgeHidden]="notes.length === 0" (click)="onShowNoteDetail()">note</mat-icon>
 
-      <mat-form-field>
-        <input matInput type="text" placeholder="สินค้า"
-        formControlName="product"
-        [matAutocomplete]="auto">
-        <mat-autocomplete autoActiveFirstOption
-          #auto="matAutocomplete">
-            <mat-option *ngFor="let product of filteredProducts | async" [value]="product.name">
-                <span>{{ product.id }}</span> &nbsp;
-              {{ product.name }}
-            </mat-option>
-          </mat-autocomplete>
-          <mat-error>กรุณาเลือกรายการสินค้า</mat-error>
-      </mat-form-field>
+          </button>
 
+          <button mat-icon-button type="button" [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
 
-      <h4>ข้อมูลน้ำหนัก (หน่วย: กิโลกรัม)</h4>
-      <div class="weight-field weight-field-focus" >
-        <label >น้ำหนักเข้า</label>
-        <input type="text" formControlName="weightIn">
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item type="button">
+              <mat-icon>build</mat-icon>
+              <span>ตั้งค่าการชั่ง</span>
+            </button>
+          </mat-menu>
+        </div>
       </div>
+    </div>
 
-      <!-- {{ dateWeightIn | date:'medium'}} -->
+    <mat-dialog-content fxLayout="column">
+      <div>
+        <h4>รายละเอียด</h4>
 
+        <div fxLayout.gt-sm="row" fxLayout.xs="column">
+          <mat-form-field fxFlex>
+            <input matInput type="text" placeholder="ทะเบียนรถ" formControlName="car">
+            <mat-error>กรุณาใส่ทะเบียนรถ</mat-error>
+          </mat-form-field>
+          <mat-form-field fxFlex>
+            <input matInput type="text" placeholder="ลูกค้า" formControlName="customer">
+          </mat-form-field>
+        </div>
+
+
+        <div fxLayout="row">
+          <mat-form-field fxFlex="50%">
+            <input matInput type="text" placeholder="สินค้า" formControlName="product" [matAutocomplete]="auto">
+            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+              <mat-option *ngFor="let product of filteredProducts | async" [value]="product.name">
+                <span>{{ product.id }}</span> &nbsp; {{ product.name }}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-error>กรุณาเลือกรายการสินค้า</mat-error>
+          </mat-form-field>
+
+          <mat-form-field fxFlex="50%">
+            <input matInput type="number" placeholder="ราคา" step="0.01" formControlName="price">
+            <mat-error *ngIf="weightLoadingInForm.get('price').errors">
+              Price is
+              <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+
+        </div>
+        <!-- Tpye Weight Loading -->
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+          <div fxFlex fxLayout>
+            <mat-button-toggle-group #btnGroup="matButtonToggleGroup" formControlName="type">
+              <mat-button-toggle class="buy" value="buy">ซื้อเข้า</mat-button-toggle>
+              <mat-button-toggle class="sell" value="sell">ขายออก</mat-button-toggle>
+              <!-- <mat-button-toggle value="other">อื่นๆ</mat-button-toggle> -->
+            </mat-button-toggle-group>
+          </div>
+
+
+        </div>
+
+        <h4>ข้อมูลน้ำหนัก (หน่วย: กิโลกรัม)</h4>
+        <div class="weight-field weight-field-focus">
+          <label>น้ำหนักเข้า</label>
+          <input type="number" formControlName="weightIn">
+        </div>
+
+      </div>
     </mat-dialog-content>
     <mat-divider></mat-divider>
     <mat-dialog-actions fxLayout="row">
@@ -43,7 +91,7 @@
       <button mat-button type="button" [mat-dialog-close]="false" color="error">ยกเลิก</button>
 
       <div fxFlex fxLayout fxLayoutAlign="flex-end" fxLayoutGap="10px">
-        <button mat-raised-button type="submit" class="save" cdkFocusInitial [disabled]="!f.valid">บันทึกข้อมูล</button>
+        <button mat-raised-button type="submit" class="save" color="primary" [ngClass]="{'sell-mode':btnGroup.value === 'sell'}" cdkFocusInitial [disabled]="!weightLoadingInForm.valid">บันทึกข้อมูล</button>
       </div>
 
     </mat-dialog-actions>

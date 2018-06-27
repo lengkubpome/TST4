@@ -1,5 +1,7 @@
+
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material';
+import { Note } from './note.model';
 
 @Component({
   template: `
@@ -15,7 +17,7 @@ import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material';
       </mat-list-item>
   </mat-nav-list>
   <div mat-list-item fxLayout="row" fxLayoutAlign="center start">
-      <button mat-button color="primary" (click)="onSave()">บันทึก</button>
+      <button mat-button color="primary" [disabled]="currentNote ==''" (click)="onSave()">บันทึก</button>
       <button mat-button (click)="onClose()" >ปิด</button>
     </div>
     `,
@@ -25,8 +27,6 @@ export class BottomSheetNoteComponent implements OnInit {
   notes: Note[] = [];
   notCurrentNote: Note[] = [];
   currentNote = '';
-
-  cutWeightNote = '';
 
   constructor(private bottomSheetRef: MatBottomSheetRef,
     @Inject(MAT_BOTTOM_SHEET_DATA) public data: any) { }
@@ -57,10 +57,3 @@ export class BottomSheetNoteComponent implements OnInit {
     this.bottomSheetRef.dismiss(false);
   }
 }
-
-
-interface Note {
-  type: string;
-  value: string;
-}
-

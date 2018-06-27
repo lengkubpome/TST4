@@ -1,3 +1,4 @@
+import { Note } from './shared/note.model';
 
 export interface Weighting {
   id: string;
@@ -9,12 +10,20 @@ export interface Weighting {
   price: number;
   weightIn: number;
   weightOut: number;
-  cutWeight?: number;
+  cutWeight?: CutWeight;
   totalWeight: number;
   amount: number;
+  type: 'buy' | 'sell' | 'other';
   state: 'waiting' | 'completed' | 'cancelled';
   recorder: string;
-  description?: string;
+  note?: Note[];
+}
+
+interface CutWeight {
+  value: number;
+  unitType: string;
+  note: string;
+
 }
 
 

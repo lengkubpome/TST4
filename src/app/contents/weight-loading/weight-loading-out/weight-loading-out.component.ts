@@ -1,13 +1,13 @@
+import { Note } from './../shared/note.model';
 import { Product, Dummy_Product } from './../product.model';
 import { FormGroup, Validators, FormControl, FormBuilder } from '@angular/forms';
 import { Weighting } from './../weighting.model';
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatBottomSheet } from '@angular/material';
 import { Observable } from 'rxjs';
-import { WeightLoadingService } from '../weight-loading.service';
 import { startWith, map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { BottomSheetNoteComponent } from '../shared/bottom-sheet-note.component';
-import { not } from '@angular/compiler/src/output/output_ast';
+import { forbiddenProducts } from '../shared/forbidden-products';
 
 @Component({
   selector: 'tst-weight-loading-out',
@@ -21,7 +21,6 @@ export class WeightLoadingOutComponent implements OnInit {
   price = 0;
   totalWeight = 0;
   cutWeight = 0;
-  noteDetail = { note1: '', note2: '' };
   notes: Note[] = [];
 
   weightLoading: Weighting;
@@ -34,7 +33,6 @@ export class WeightLoadingOutComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder,
     private noteBottomSheet: MatBottomSheet,
-    private weightLoadingService: WeightLoadingService
   ) {
     this.products = Dummy_Product;
   }
@@ -45,7 +43,10 @@ export class WeightLoadingOutComponent implements OnInit {
     this.weightLoadingOutForm = this.fb.group({
       car: [{ value: this.weightLoading.car, disabled: true }, Validators.required],
       customer: [{ value: this.weightLoading.customer, disabled: true }],
-      product: [{ value: this.weightLoading.product, disabled: false }, Validators.required],
+      product: [{ value: this.weightLoading.product, disabled: false }, Validators.compose([
+        Validators.required,
+        forbiddenProducts(this.products)
+      ])],
       price: [{ value: this.weightLoading.price, disabled: false },
       Validators.compose([Validators.required])],
       type: [{ value: 'buy', disabled: false }],
@@ -56,12 +57,13 @@ export class WeightLoadingOutComponent implements OnInit {
       amount: [{ value: 0, disabled: true }],
       cutWeightInput: ['0'],
       cutWeightTypeUnit: ['kg'],
-      cutWeightNote: ['']
+      cutWeightNote: [{ value: '', disabled: true }]
 
     });
 
     this.calculateWeightLoading();
 
+    // Fillter Products
     this.filteredProducts = this.weightLoadingOutForm.get('product').valueChanges.pipe(
       startWith(''),
       map(product => product ? this.filterProducts(product) : this.products.slice())
@@ -76,6 +78,19 @@ export class WeightLoadingOutComponent implements OnInit {
         } else {
           this.showCutWeight = this.showCutWeight;
         }
+      });
+
+    // Product Change
+    this.weightLoadingOutForm.get('product').valueChanges
+      .pipe(
+        debounceTime(400),
+      )
+      .subscribe(res => {
+        const product = this.products.find(item => item.name === res);
+        return product !== undefined ?
+          this.weightLoadingOutForm.get('price').setValue(product.price) :
+          this.weightLoadingOutForm.get('price').setValue(0);
+
       });
 
     // Price Change
@@ -100,7 +115,15 @@ export class WeightLoadingOutComponent implements OnInit {
         debounceTime(400),
         distinctUntilChanged()
       )
-      .subscribe(() => this.calculateCutWeight());
+      .subscribe(value => {
+        if (value === 0 || value === null) {
+          this.weightLoadingOutForm.get('cutWeightNote').disable();
+
+        } else {
+          this.weightLoadingOutForm.get('cutWeightNote').enable();
+        }
+        this.calculateCutWeight();
+      });
 
     // Cut Weight Note Change
     this.weightLoadingOutForm.get('cutWeightNote').valueChanges
@@ -196,8 +219,6 @@ export class WeightLoadingOutComponent implements OnInit {
         this.notes = note;
       }
 
-      console.log(this.notes);
-
     });
 
   }
@@ -208,10 +229,4 @@ export class WeightLoadingOutComponent implements OnInit {
 
   }
 
-}
-
-
-interface Note {
-  type: string;
-  value: string;
 }

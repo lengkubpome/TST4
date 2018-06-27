@@ -1,5 +1,3 @@
-import { map } from 'rxjs/operators';
-
 import { Injectable } from '@angular/core';
 import { Weighting } from './weighting.model';
 
@@ -41,9 +39,9 @@ const Dummy_Weight: Weighting[] = [
     price: 10.10,
     weightIn: 13945,
     weightOut: 9060,
-    cutWeight: 0,
     totalWeight: 4885,
     amount: 49339,
+    type: 'sell',
     state: 'completed',
     recorder: 'Tester',
   },
@@ -57,9 +55,9 @@ const Dummy_Weight: Weighting[] = [
     price: 10.10,
     weightIn: 2705,
     weightOut: 1565,
-    cutWeight: 0,
     totalWeight: 1140,
     amount: 5130,
+    type: 'buy',
     state: 'completed',
     recorder: 'Tester',
   },
@@ -73,9 +71,9 @@ const Dummy_Weight: Weighting[] = [
     price: 10.00,
     weightIn: 1955,
     weightOut: 1840,
-    cutWeight: 0,
     totalWeight: 115,
     amount: 1150,
+    type: 'buy',
     state: 'completed',
     recorder: 'Tester',
   }

@@ -1,5 +1,5 @@
 <section>
-  <form [formGroup]="weightLoadingOutForm" #f="ngForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="weightLoadingOutForm"  (ngSubmit)="onSubmit()">
 
     <div mat-dialog-title fxlayout="column">
       <div class="header"
@@ -20,31 +20,22 @@
           </button>
 
           <mat-menu #menu="matMenu">
-            <button mat-menu-item>
+            <button mat-menu-item type="button">
               <mat-icon>edit</mat-icon>
               <span>แก้ไขข้อมูล</span>
             </button>
-            <button mat-menu-item>
+            <button mat-menu-item type="button">
               <mat-icon>build</mat-icon>
               <span>ตั้งค่าการชั่ง</span>
             </button>
           </mat-menu>
         </div>
       </div>
-
-
     </div>
 
     <mat-dialog-content fxLayout="column">
       <div>
-
-        <div fxLayout="row" fxLayoutAlign="space-between center">
-          <div fxFlex>
-            <h4 mat-subheader>รายละเอียดการชั่ง</h4>
-          </div>
-
-
-        </div>
+        <h4>รายละเอียดการชั่ง</h4>
 
         <div fxLayout.gt-sm="row" fxLayout.xs="column">
           <mat-form-field fxFlex>
@@ -70,7 +61,7 @@
           <mat-form-field fxFlex="50%">
             <input matInput type="number" placeholder="ราคา" step="0.01" formControlName="price">
             <mat-error *ngIf="weightLoadingOutForm.get('price').errors">
-              Email is
+              Pice is
               <strong>required</strong>
             </mat-error>
           </mat-form-field>
@@ -85,7 +76,7 @@
             </mat-button-toggle-group>
           </div>
           <div fxFlex fxLayout fxLayoutAlign="flex-end">
-            <button mat-button color="warn" fxFlexAlign="start" *ngIf="!showCutWeight && btnGroup.value !='sell'" (click)="showCutWeight = true">
+            <button mat-button type="button" color="warn" fxFlexAlign="start" *ngIf="!showCutWeight && btnGroup.value !='sell'" (click)="showCutWeight = true">
               หักสิ่งเจือปน
             </button>
           </div>
@@ -120,7 +111,7 @@
                 <strong>required</strong>
               </mat-error> -->
             </mat-form-field>
-            <button mat-button color="warn" (click)="onResetCutWeight()">ลบ</button>
+            <button mat-button type="button" color="warn" (click)="onResetCutWeight()">ลบ</button>
 
           </div>
 
