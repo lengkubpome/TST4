@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Weighting } from './weighting.model';
 
-import * as fromWeightLoading from './weight-loading.reducer';
-import * as WeightLoading from './weight-loading.action';
+import * as fromWeightLoading from './store/weight-loading.reducer';
+import * as WeightLoading from './store/weight-loading.action';
 import { Store } from '@ngrx/store';
 
 @Injectable()

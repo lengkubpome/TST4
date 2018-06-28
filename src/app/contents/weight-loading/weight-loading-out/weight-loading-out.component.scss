@@ -21,10 +21,16 @@ $app-theme: mat-light-theme($app-primary, $app-accent);
     .sell-mode{
       background: mat-color($accent)
     }
+    .buy-mode{
+      background: mat-color($primary)
+    }
   }
 
   .sell-mode{
     background: mat-color($accent)
+  }
+  .buy-mode{
+    background: mat-color($primary)
   }
 
   mat-dialog-actions {

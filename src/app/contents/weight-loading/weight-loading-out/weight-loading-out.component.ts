@@ -1,6 +1,6 @@
 import { Note } from './../shared/note.model';
 import { Product, Dummy_Product } from './../product.model';
-import { FormGroup, Validators, FormControl, FormBuilder } from '@angular/forms';
+import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Weighting } from './../weighting.model';
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatBottomSheet } from '@angular/material';
@@ -16,16 +16,15 @@ import { forbiddenProducts } from '../shared/forbidden-products';
 })
 export class WeightLoadingOutComponent implements OnInit {
 
-  showCutWeight: boolean;
+  weightLoading: Weighting;
+  weightLoadingOutForm: FormGroup;
 
   price = 0;
   totalWeight = 0;
   cutWeight = 0;
   notes: Note[] = [];
+  showCutWeight: boolean;
 
-  weightLoading: Weighting;
-
-  weightLoadingOutForm: FormGroup;
   products: Product[];
   filteredProducts: Observable<Product[]>;
 
@@ -40,6 +39,9 @@ export class WeightLoadingOutComponent implements OnInit {
   ngOnInit() {
     this.weightLoading = this.data.weighting;
 
+    console.log(this.weightLoading);
+
+
     this.weightLoadingOutForm = this.fb.group({
       car: [{ value: this.weightLoading.car, disabled: true }, Validators.required],
       customer: [{ value: this.weightLoading.customer, disabled: true }],
@@ -49,7 +51,7 @@ export class WeightLoadingOutComponent implements OnInit {
       ])],
       price: [{ value: this.weightLoading.price, disabled: false },
       Validators.compose([Validators.required])],
-      type: [{ value: 'buy', disabled: false }],
+      type: [{ value: this.weightLoading.type, disabled: false }],
       weightIn: [{ value: this.weightLoading.weightIn, disabled: true }],
       weightOut: [{ value: 1000, disabled: true }],
       cutWeight: [{ value: 0, disabled: true }],
@@ -60,6 +62,12 @@ export class WeightLoadingOutComponent implements OnInit {
       cutWeightNote: [{ value: '', disabled: true }]
 
     });
+
+    // initial Notes
+    this.weightLoading.note !== undefined ?
+      this.notes = this.weightLoading.note :
+      this.notes = [];
+
 
     this.calculateWeightLoading();
 
@@ -84,7 +92,7 @@ export class WeightLoadingOutComponent implements OnInit {
     this.weightLoadingOutForm.get('product').valueChanges
       .pipe(
         debounceTime(400),
-      )
+    )
       .subscribe(res => {
         const product = this.products.find(item => item.name === res);
         return product !== undefined ?
@@ -139,6 +147,7 @@ export class WeightLoadingOutComponent implements OnInit {
       )
       .subscribe(() => this.calculateCutWeight());
   }
+
 
   private calculateCutWeight() {
     const value = this.weightLoadingOutForm.get('cutWeightInput').value;

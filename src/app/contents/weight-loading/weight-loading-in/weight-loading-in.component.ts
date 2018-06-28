@@ -5,7 +5,7 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MatBottomSheet, MAT_DIALOG_DATA } from '@angular/material';
 import { Observable } from 'rxjs';
-import { map, startWith, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { map, startWith, debounceTime } from 'rxjs/operators';
 
 import { Product, Dummy_Product } from './../product.model';
 import { BottomSheetNoteComponent } from '../shared/bottom-sheet-note.component';
@@ -92,9 +92,7 @@ export class WeightLoadingInComponent implements OnInit {
       if (note !== false) {
         this.notes = note;
       }
-
     });
-
   }
 
   onSubmit() {
@@ -105,7 +103,7 @@ export class WeightLoadingInComponent implements OnInit {
       car: this.weightLoadingInForm.get('car').value,
       customer: this.weightLoadingInForm.get('customer').value,
       product: this.weightLoadingInForm.get('product').value,
-      price: 0,
+      price: this.weightLoadingInForm.get('price').value,
       weightIn: this.weightLoadingInForm.get('weightIn').value,
       weightOut: 0,
       totalWeight: 0,
@@ -116,7 +114,7 @@ export class WeightLoadingInComponent implements OnInit {
       note: this.notes
     };
 
-    console.log(weighting);
+    // console.log(weighting);
 
     this.weightLoadingService.recordWeightLoading(weighting);
     this.dialogRef.close();

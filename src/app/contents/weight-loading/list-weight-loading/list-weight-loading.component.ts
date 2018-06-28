@@ -1,13 +1,15 @@
 import { Weighting } from '../weighting.model';
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatTableDataSource, MatSort, MatDialog } from '@angular/material';
+import { Store } from '@ngrx/store';
 
 import { WeightLoadingInComponent } from './../weight-loading-in/weight-loading-in.component';
+import { WeightLoadingOutComponent } from '../weight-loading-out/weight-loading-out.component';
+
 import { WeightLoadingService } from '../weight-loading.service';
 
-import * as fromWeightLoading from '../weight-loading.reducer';
-import { Store } from '@ngrx/store';
-import { WeightLoadingOutComponent } from '../weight-loading-out/weight-loading-out.component';
+import * as fromWeightLoading from '../store/weight-loading.reducer';
+
 
 @Component({
   selector: 'tst-list-weight-loading',

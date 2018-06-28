@@ -3,7 +3,8 @@
 
     <div mat-dialog-title fxlayout="column">
       <div class="header"
-        [ngClass]="{'sell-mode':btnGroup.value === 'sell'}"
+        [ngClass]="{'sell-mode': this.weightLoadingOutForm.get('type').value === 'sell',
+                    'buy-mode': this.weightLoadingOutForm.get('type').value === 'buy'}"
         fxlayout="row" fxLayoutAlign="space-between center">
         <div>
           <span>ชั่งรถออก</span>
@@ -154,7 +155,10 @@
       </div>
 
       <div fxFlex fxLayout fxLayoutAlign="flex-end">
-        <button mat-raised-button type="submit" class="save" color="primary" [ngClass]="{'sell-mode':btnGroup.value === 'sell'}" cdkFocusInitial [disabled]="!weightLoadingOutForm.valid">บันทึกข้อมูล</button>
+        <button mat-raised-button type="submit" class="save" color="primary"  cdkFocusInitial
+          [ngClass]="{'sell-mode': this.weightLoadingOutForm.get('type').value === 'sell',
+                      'buy-mode': this.weightLoadingOutForm.get('type').value === 'buy'}"
+          [disabled]="!weightLoadingOutForm.valid">บันทึกข้อมูล</button>
       </div>
 
     </mat-dialog-actions>

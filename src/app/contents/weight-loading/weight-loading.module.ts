@@ -12,7 +12,7 @@ import { WeightLoadingOutComponent } from './weight-loading-out/weight-loading-o
 import { WeightLoadingService } from './weight-loading.service';
 
 import { StoreModule } from '@ngrx/store';
-import { weightLoadingReducer } from './weight-loading.reducer';
+import { weightLoadingReducer } from './store/weight-loading.reducer';
 import { BottomSheetNoteComponent } from './shared/bottom-sheet-note.component';
 
 const routes: Routes = [
