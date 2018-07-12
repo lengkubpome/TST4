@@ -10,20 +10,17 @@ export interface Weighting {
   price: number;
   weightIn: number;
   weightOut: number;
-  cutWeight?: CutWeight;
+  cutWeight?: {
+    value: number;
+    unitType: string;
+    note: string;
+  };
   totalWeight: number;
   amount: number;
   type: 'buy' | 'sell' | 'other';
   state: 'waiting' | 'completed' | 'cancelled';
-  recorder: string;
   note?: Note[];
 }
 
-interface CutWeight {
-  value: number;
-  unitType: string;
-  note: string;
-
-}
 
 

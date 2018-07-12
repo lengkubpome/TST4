@@ -1,33 +1,32 @@
 <section>
-  <form [formGroup]="weightLoadingOutForm"  (ngSubmit)="onSubmit()">
+  <form [formGroup]="weightLoadingOutForm" (ngSubmit)="onSubmit()">
 
     <div mat-dialog-title fxlayout="column">
-      <div class="header"
-        [ngClass]="{'sell-mode': this.weightLoadingOutForm.get('type').value === 'sell',
-                    'buy-mode': this.weightLoadingOutForm.get('type').value === 'buy'}"
-        fxlayout="row" fxLayoutAlign="space-between center">
+      <div class="header" [ngClass]="{'sell-mode': this.weightLoadingOutForm.get('type').value === 'sell',
+                    'buy-mode': this.weightLoadingOutForm.get('type').value === 'buy'}" fxlayout="row" fxLayoutAlign="space-between center">
         <div>
           <span>ชั่งรถออก</span>
         </div>
 
         <div class="end" fxLayoutGap="10px">
-          <button mat-icon-button type="button" class="note">
-            <mat-icon [matBadge]="notes.length" matBadgeColor="warn" [matBadgeHidden]="notes.length === 0" (click)="onShowNoteDetail()">note</mat-icon>
+          <button mat-icon-button type="button" #btnNotes class="note" (click)="onShowNoteDetail()">
+            <mat-icon [matBadge]="notes.length" matBadgeColor="warn" [matBadgeHidden]="notes.length === 0">
+              note</mat-icon>
 
           </button>
 
-          <button mat-icon-button type="button" [matMenuTriggerFor]="menu">
+          <button mat-icon-button type="button" #btnMenu [matMenuTriggerFor]="menu">
             <mat-icon>more_vert</mat-icon>
           </button>
 
           <mat-menu #menu="matMenu">
-            <button mat-menu-item type="button">
+            <button mat-menu-item type="button" (click)="saveData()">
               <mat-icon>edit</mat-icon>
-              <span>แก้ไขข้อมูล</span>
+              <span>แก้ไขข้อมูลการชั่ง</span>
             </button>
-            <button mat-menu-item type="button">
-              <mat-icon>build</mat-icon>
-              <span>ตั้งค่าการชั่ง</span>
+            <button mat-menu-item type="button" (click)="onCancel()">
+              <mat-icon>delete</mat-icon>
+              <span>ลบข้อมูลการชั่ง</span>
             </button>
           </mat-menu>
         </div>
@@ -36,7 +35,10 @@
 
     <mat-dialog-content fxLayout="column">
       <div>
-        <h4>รายละเอียดการชั่ง</h4>
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+          <h4>รายละเอียด</h4>
+          <span matTooltipPosition="below" matTooltip="ลำดับการชั่ง">{{ weightLoading.id }}</span>
+        </div>
 
         <div fxLayout.gt-sm="row" fxLayout.xs="column">
           <mat-form-field fxFlex>
@@ -60,7 +62,7 @@
           </mat-form-field>
 
           <mat-form-field fxFlex="50%">
-            <input matInput type="number" placeholder="ราคา" step="0.01" formControlName="price">
+            <input matInput type="number" placeholder="ราคา" step="0.01" formControlName="price" cdkFocusInitial>
             <mat-error *ngIf="weightLoadingOutForm.get('price').errors">
               Pice is
               <strong>required</strong>
@@ -73,7 +75,7 @@
           <div fxFlex fxLayout>
             <mat-button-toggle-group #btnGroup="matButtonToggleGroup" formControlName="type">
               <mat-button-toggle class="buy" value="buy">ซื้อเข้า</mat-button-toggle>
-              <mat-button-toggle class="sell" value="sell" >ขายออก</mat-button-toggle>
+              <mat-button-toggle class="sell" value="sell">ขายออก</mat-button-toggle>
             </mat-button-toggle-group>
           </div>
           <div fxFlex fxLayout fxLayoutAlign="flex-end">
@@ -107,10 +109,8 @@
           <div fxLayout="row" fxLayoutAlign="space-between end">
             <mat-form-field fxFlex="60%">
               <input matInput type="text" placeholder="หมายเหตุ" formControlName="cutWeightNote">
-              <!-- <mat-error *ngIf="weightLoadingOutForm.get('cutWeightInput').value > 0">
-                Email is
-                <strong>required</strong>
-              </mat-error> -->
+              <mat-error>กรุณาใส่สาเหตุการตัดน้ำหนัก
+              </mat-error>
             </mat-form-field>
             <button mat-button type="button" color="warn" (click)="onResetCutWeight()">ลบ</button>
 
@@ -148,19 +148,26 @@
 
     </mat-dialog-content>
     <mat-divider></mat-divider>
-    <mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center">
+    <mat-dialog-actions fxLayout="column" >
 
-      <div fxFlex>
-        <button mat-button type="button" [mat-dialog-close]="false" color="error">ยกเลิก</button>
+      <div fxLayout="row" fxLayoutAlign="space-between center" *ngIf="!loadingMode">
+        <button mat-button type="button" #btnCancel [mat-dialog-close]="false" color="error">ยกเลิก</button>
+
+        <button mat-raised-button type="submit" class="save" color="primary" [ngClass]="{'sell-mode': this.weightLoadingOutForm.get('type').value === 'sell',
+        'buy-mode': this.weightLoadingOutForm.get('type').value === 'buy'}" [disabled]="!weightLoadingOutForm.valid">
+          บันทึกข้อมูล
+        </button>
       </div>
 
-      <div fxFlex fxLayout fxLayoutAlign="flex-end">
-        <button mat-raised-button type="submit" class="save" color="primary"  cdkFocusInitial
-          [ngClass]="{'sell-mode': this.weightLoadingOutForm.get('type').value === 'sell',
-                      'buy-mode': this.weightLoadingOutForm.get('type').value === 'buy'}"
-          [disabled]="!weightLoadingOutForm.valid">บันทึกข้อมูล</button>
+      <div fxFlex fxLayout="row" fxLayoutAlign="center none"  *ngIf="loadingMode" style="padding:9px 0;">
+        <mat-spinner diameter="20"></mat-spinner>
+        &nbsp;&nbsp;
+        <span>บันทึกข้อมูล</span>
+
+
       </div>
 
     </mat-dialog-actions>
+
   </form>
 </section>

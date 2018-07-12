@@ -1,18 +1,39 @@
 <div fxLayout="column">
   <mat-toolbar>
-    <span>รายการชั่งน้ำหนัก</span>
+    <div fxFlex fxLayout="row" fxLayoutAlign="start center">
+      <a class="header-main"
+        [routerLink]="['../weight-loadings']"
+        (click)="showRoute=''">รายการชั่งน้ำหนัก</a>
+      <mat-icon *ngIf="showRoute !== ''">chevron_right</mat-icon>
+      <span *ngIf="showRoute === 'history'"> รายการบันทึก</span>
+      <span *ngIf="showRoute === 'deleted'"> รายการถูกลบ</span>
+    </div>
 
-    <div fxFlex fxLayout fxLayoutAlign="flex-end" fxLayoutGap="10px">
-      <button mat-icon-button>
-        <mat-icon>history</mat-icon>
-      </button>
+
+    <div fxFlex fxLayout fxLayoutAlign="flex-end">
+      <div *ngIf="showRoute === ''">
+        <button mat-icon-button [routerLink]="['past-list']">
+          <mat-icon>history</mat-icon>
+        </button>
+        <button mat-icon-button [routerLink]="['recently-deleted']" >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+
+      <div *ngIf="showRoute !== ''">
+          <button mat-icon-button [routerLink]="['../weight-loadings']" >
+              <mat-icon>close</mat-icon>
+            </button>
+      </div>
+
 
     </div>
 
   </mat-toolbar>
 
   <div class="content">
-    <tst-list-weight-loading></tst-list-weight-loading>
+    <router-outlet></router-outlet>
+
   </div>
 
 </div>

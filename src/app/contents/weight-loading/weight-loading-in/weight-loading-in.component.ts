@@ -1,5 +1,5 @@
-import { Note } from './../shared/note.model';
-import { Weighting } from './../weighting.model';
+import { Note } from '../shared/note.model';
+import { Weighting } from '../weighting.model';
 import { WeightLoadingService } from '../weight-loading.service';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Component, OnInit, Inject } from '@angular/core';
@@ -7,7 +7,7 @@ import { MatDialogRef, MatBottomSheet, MAT_DIALOG_DATA } from '@angular/material
 import { Observable } from 'rxjs';
 import { map, startWith, debounceTime } from 'rxjs/operators';
 
-import { Product, Dummy_Product } from './../product.model';
+import { Product, Dummy_Product } from '../product.model';
 import { BottomSheetNoteComponent } from '../shared/bottom-sheet-note.component';
 import { forbiddenProducts } from '../shared/forbidden-products';
 
@@ -97,26 +97,32 @@ export class WeightLoadingInComponent implements OnInit {
 
   onSubmit() {
     const weighting: Weighting = {
-      id: '1',
+      id: Date.now().toString(),
       dateLoadIn: new Date(Date.now()),
       dateLoadOut: null,
       car: this.weightLoadingInForm.get('car').value,
       customer: this.weightLoadingInForm.get('customer').value,
       product: this.weightLoadingInForm.get('product').value,
       price: this.weightLoadingInForm.get('price').value,
-      weightIn: this.weightLoadingInForm.get('weightIn').value,
+      weightIn: this.getWeightLoadingFromDevice(),
       weightOut: 0,
       totalWeight: 0,
       amount: 0,
       type: this.weightLoadingInForm.get('type').value,
       state: 'waiting',
-      recorder: 'Tester', //TODO: แก้ไขผู้บันทึก
       note: this.notes
     };
 
     // console.log(weighting);
 
-    this.weightLoadingService.recordWeightLoading(weighting);
+    // TODO: สร้างระบบให้เช็คว่าบันทึกข้อมูลผ่านหรือไม่
+    this.weightLoadingService.recordWeightLoadingIn(weighting);
     this.dialogRef.close();
+  }
+
+  private getWeightLoadingFromDevice(): number {
+    const getValue = 1000;
+    this.weightLoadingInForm.get('weightIn').setValue(getValue);
+    return getValue;
   }
 }

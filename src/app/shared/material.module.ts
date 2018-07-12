@@ -27,6 +27,8 @@ import {
   MatButtonToggleModule,
   MatBadgeModule,
   MatBottomSheetModule,
+  MatTooltipModule,
+  MatProgressBarModule
 } from '@angular/material';
 
 @NgModule({
@@ -54,11 +56,12 @@ import {
     MatDividerModule,
     MatMenuModule,
     MatAutocompleteModule,
-    MatSelectModule,
     MatExpansionModule,
     MatBadgeModule,
     MatBottomSheetModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatTooltipModule,
+    MatProgressBarModule
   ],
   exports: [
     MatButtonModule,
@@ -84,11 +87,13 @@ import {
     MatDividerModule,
     MatMenuModule,
     MatAutocompleteModule,
-    MatSelectModule,
     MatExpansionModule,
     MatBadgeModule,
     MatBottomSheetModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatTooltipModule,
+    MatProgressBarModule,
+
   ]
 })
 export class MaterialModule { }

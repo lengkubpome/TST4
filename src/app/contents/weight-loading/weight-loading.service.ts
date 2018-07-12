@@ -2,30 +2,64 @@ import { Injectable } from '@angular/core';
 import { Weighting } from './weighting.model';
 
 import * as fromWeightLoading from './store/weight-loading.reducer';
-import * as WeightLoading from './store/weight-loading.action';
+import * as WeightLoading from './store/weight-loading.actions';
 import { Store } from '@ngrx/store';
 
 @Injectable()
 export class WeightLoadingService {
 
   private weightList: Weighting[] = Dummy_Weight;
+  private weightLoadingId: number = Dummy_doc_id.weightLoadingID;
 
-  constructor(private store: Store<fromWeightLoading.State>) { }
+  constructor(private store: Store<fromWeightLoading.State>) {
+  }
 
   fetchListWeightLoading() {
     this.store.dispatch(new WeightLoading.SetListWeightLoading(this.weightList));
+    this.store.dispatch(new WeightLoading.SetWeightLoadingID(this.weightLoadingId));
   }
 
-  recordWeightLoading(weighting: Weighting) {
+  recordWeightLoadingIn(weighting: Weighting) {
+    this.store.dispatch(new WeightLoading.AddWeightLoadingIn(weighting));
+
     this.addWeightingToDatabase(weighting);
+    this.fetchListWeightLoading();
+
+  }
+
+  recordWeightLoadingOut(weighting: Weighting) {
+    this.updateWeightToDatabase(weighting);
+    this.fetchListWeightLoading();
+
+    // this.store.dispatch(new WeightLoading.AddWeightLoadingOut(weighting));
+
+  }
+
+  cancelWeightLoading(weighting: Weighting) {
+    weighting.state = 'cancelled';
+    weighting.dateLoadOut = new Date(Date.now());
+    this.updateWeightToDatabase(weighting);
     this.fetchListWeightLoading();
   }
 
   private addWeightingToDatabase(weighting: Weighting) {
     this.weightList = [...this.weightList, weighting];
+    this.weightLoadingId++;
+  }
+  private updateWeightToDatabase(weighting: Weighting) {
+    const id = weighting.id;
+    const index = this.weightList.findIndex(item => item.id === id);
+    const weightList = [...this.weightList];
+    weightList[index] = weighting;
+    this.weightList = weightList;
+
   }
 
 }
+
+const Dummy_doc_id = {
+  weightLoadingID: 1
+};
 
 
 const Dummy_Weight: Weighting[] = [
@@ -42,8 +76,7 @@ const Dummy_Weight: Weighting[] = [
     totalWeight: 4885,
     amount: 49339,
     type: 'sell',
-    state: 'completed',
-    recorder: 'Tester',
+    state: 'completed'
   },
   {
     id: '2',
@@ -58,8 +91,7 @@ const Dummy_Weight: Weighting[] = [
     totalWeight: 1140,
     amount: 5130,
     type: 'buy',
-    state: 'completed',
-    recorder: 'Tester',
+    state: 'completed'
   },
   {
     id: '3',
@@ -74,7 +106,6 @@ const Dummy_Weight: Weighting[] = [
     totalWeight: 115,
     amount: 1150,
     type: 'buy',
-    state: 'completed',
-    recorder: 'Tester',
+    state: 'completed'
   }
 ];

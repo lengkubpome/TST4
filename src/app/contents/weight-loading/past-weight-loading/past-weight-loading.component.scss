@@ -1,0 +1,17 @@
+.search {
+  // margin-bottom: -20px;
+  mat-icon {
+    color: rgba(0, 0, 0, 0.5);
+  }
+}
+
+mat-row:hover{
+  background-color: rgba(160, 206, 248, 0.08)
+}
+
+ mat-cell.buy{
+  color: limegreen;
+}
+mat-cell.sell{
+  color:  red;
+}

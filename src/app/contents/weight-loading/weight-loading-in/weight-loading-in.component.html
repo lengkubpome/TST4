@@ -15,7 +15,7 @@
 
           </button>
 
-          <button mat-icon-button type="button" [matMenuTriggerFor]="menu">
+          <!-- <button mat-icon-button type="button" [matMenuTriggerFor]="menu">
             <mat-icon>more_vert</mat-icon>
           </button>
 
@@ -24,7 +24,7 @@
               <mat-icon>build</mat-icon>
               <span>ตั้งค่าการชั่ง</span>
             </button>
-          </mat-menu>
+          </mat-menu> -->
         </div>
       </div>
     </div>
@@ -35,11 +35,11 @@
 
         <div fxLayout.gt-sm="row" fxLayout.xs="column">
           <mat-form-field fxFlex>
-            <input matInput type="text" placeholder="ทะเบียนรถ" formControlName="car">
+            <input matInput type="text" placeholder="ทะเบียนรถ" cdkFocusInitial formControlName="car">
             <mat-error>กรุณาใส่ทะเบียนรถ</mat-error>
           </mat-form-field>
           <mat-form-field fxFlex>
-            <input matInput type="text" placeholder="ลูกค้า" formControlName="customer">
+            <input matInput type="text" placeholder="ลูกค้า" formControlName="customer" >
           </mat-form-field>
         </div>
 
@@ -55,7 +55,7 @@
             <mat-error>กรุณาเลือกรายการสินค้า</mat-error>
           </mat-form-field>
 
-          <mat-form-field fxFlex="50%">
+          <mat-form-field fxFlex="50%" >
             <input matInput type="number" placeholder="ราคา" step="0.01" formControlName="price">
             <mat-error *ngIf="weightLoadingInForm.get('price').errors">
               Price is
