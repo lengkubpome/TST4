@@ -9,7 +9,7 @@ import { PastWeightLoadingComponent } from './past-weight-loading/past-weight-lo
 import { WeightLoadingInComponent } from './weight-loading-in/weight-loading-in.component';
 import { WeightLoadingOutComponent } from './weight-loading-out/weight-loading-out.component';
 import { BottomSheetNoteComponent } from './shared/bottom-sheet-note.component';
-import { DeleteWeightLoadingComponent } from './delete-weight-loading/delete-weight-loading.component';
+import { DeletedWeightLoadingComponent } from './deleted-weight-loading/deleted-weight-loading.component';
 import { CancelDialogComponent } from './weight-loading-out/alert-dialog.component';
 
 import { WeightLoadingService } from './weight-loading.service';
@@ -23,7 +23,7 @@ path: '', component: WeightLoadingComponent,
 children: [
       { path: '', component: ListWeightLoadingComponent },
       { path: 'past-list', component: PastWeightLoadingComponent },
-      { path: 'recently-deleted', component: DeleteWeightLoadingComponent }
+      { path: 'recently-deleted', component: DeletedWeightLoadingComponent }
     ]
   }
 
@@ -37,7 +37,7 @@ children: [
     WeightLoadingInComponent,
     WeightLoadingOutComponent,
     BottomSheetNoteComponent,
-    DeleteWeightLoadingComponent,
+    DeletedWeightLoadingComponent,
     CancelDialogComponent
   ],
   imports: [

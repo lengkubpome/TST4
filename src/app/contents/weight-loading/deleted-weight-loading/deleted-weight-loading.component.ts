@@ -8,11 +8,11 @@ import * as weightLoadingAction from '../store/weight-loading.actions';
 import { WeightLoadingService } from '../weight-loading.service';
 
 @Component({
-  selector: 'tst-delete-weight-loading',
-  templateUrl: './delete-weight-loading.component.html',
-  styleUrls: ['./delete-weight-loading.component.scss']
+  selector: 'tst-deleted-weight-loading',
+  templateUrl: './deleted-weight-loading.component.html',
+  styleUrls: ['./deleted-weight-loading.component.scss']
 })
-export class DeleteWeightLoadingComponent implements OnInit, AfterViewInit {
+export class DeletedWeightLoadingComponent implements OnInit, AfterViewInit {
   recentlyDeleted: Weighting[] = [];
 
   displayedColumns = ['car', 'product', 'weightIn', 'type', 'dateLoadIn', 'state'];

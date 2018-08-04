@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DeleteWeightLoadingComponent } from './delete-weight-loading.component';
+import { DeletedWeightLoadingComponent } from './deleted-weight-loading.component';
 
 describe('DeleteWeightLoadingComponent', () => {
-  let component: DeleteWeightLoadingComponent;
-  let fixture: ComponentFixture<DeleteWeightLoadingComponent>;
+  let component: DeletedWeightLoadingComponent;
+  let fixture: ComponentFixture<DeletedWeightLoadingComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [DeleteWeightLoadingComponent]
+      declarations: [DeletedWeightLoadingComponent]
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DeleteWeightLoadingComponent);
+    fixture = TestBed.createComponent(DeletedWeightLoadingComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
