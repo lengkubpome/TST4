@@ -1,7 +1,7 @@
 @import '~@angular/material/theming';
 @include mat-core();
 $app-primary: mat-palette($mat-indigo);
-$app-accent : mat-palette($mat-pink, A200, A100, A400);
+$app-accent: mat-palette($mat-pink, A200, A100, A400);
 $app-theme: mat-light-theme($app-primary, $app-accent);
 @mixin mix-app-theme($app-theme) {
   $primary: map-get($app-theme, primary);
@@ -16,23 +16,20 @@ $app-theme: mat-light-theme($app-primary, $app-accent);
       .end {
         margin-right: -10px;
       }
-
     }
-    .sell-mode{
-      background: mat-color($accent)
+    .sell-mode {
+      background: mat-color($accent);
     }
-    .buy-mode{
-      background: mat-color($primary)
+    .buy-mode {
+      background: mat-color($primary);
     }
   }
-
-  .sell-mode{
-    background: mat-color($accent)
+  .sell-mode {
+    background: mat-color($accent);
   }
-  .buy-mode{
-    background: mat-color($primary)
+  .buy-mode {
+    background: mat-color($primary);
   }
-
   mat-dialog-actions {
     bottom: 0;
   }
@@ -46,7 +43,7 @@ $app-theme: mat-light-theme($app-primary, $app-accent);
   }
   .mat-form-field-appearance-fill .mat-form-field-flex {
     border-radius: 4px;
-    padding: .75em .75em 0 .75em;
+    padding: 0.75em 0.75em 0 0.75em;
   }
   .weight-field {
     display: flex;
@@ -124,19 +121,27 @@ $app-theme: mat-light-theme($app-primary, $app-accent);
     }
     &:hover {
       background: rgba(0, 17, 255, 0.05);
+      border-radius: 4px;
+      // padding: 1em;
+      // margin-top: 1em;
+      -webkit-transition: 0.3s;
+      transition: 0.3s;
     }
   }
-  .cut-weight-field {
-    background: rgba(0, 0, 0, 0.03); // border: 3px solid #ccc;
+
+  .cut-weight {
+    background: rgba(255, 0, 0, 0.089);
     border-radius: 4px;
-    padding: 1em 0.75em;
-    margin-top: 1em;
+    // padding: 1em;
     -webkit-transition: 0.3s;
     transition: 0.3s;
     &:hover {
-      background: rgba(255, 0, 0, 0.05); // color: #f44336;
+      background: rgba(255, 0, 0, 0.25);
+      cursor: pointer;
     }
   }
+
+
   .mat-button-toggle-checked.buy {
     background-color: mat-color($primary);
     color: mat-color($primary, default-contrast);

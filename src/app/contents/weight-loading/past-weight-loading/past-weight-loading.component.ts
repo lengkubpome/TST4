@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import * as weightLoadingAction from '../store/weight-loading.actions';
 import * as fromWeightLoading from '../store/weight-loading.reducer';
 import { WeightLoadingService } from '../weight-loading.service';
-import { Weighting } from '../weighting.model';
+import { Weighting } from '../../../shared/models/weighting.model';
 
 
 @Component({

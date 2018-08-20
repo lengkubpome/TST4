@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Weighting } from '../weighting.model';
+import { Weighting } from '../../../shared/models/weighting.model';
 
 
 export const SET_ROUTE = '[Route] Set Route';

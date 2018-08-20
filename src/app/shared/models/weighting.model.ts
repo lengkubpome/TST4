@@ -1,11 +1,12 @@
-import { Note } from './shared/note.model';
+import { Vendor } from './vendor.model';
 
 export interface Weighting {
   id: string;
   dateLoadIn: Date;
   dateLoadOut: Date;
   car: string;
-  customer?: string;
+  // vendor?: Vendor;
+  vendor?: string;
   product: string;
   price: number;
   weightIn: number;
@@ -17,10 +18,12 @@ export interface Weighting {
   };
   totalWeight: number;
   amount: number;
-  type: 'buy' | 'sell' | 'other';
+  type: 'buy' | 'sell';
   state: 'waiting' | 'completed' | 'cancelled';
-  note?: Note[];
+  notes?: WeightingNote[];
 }
 
-
-
+export interface WeightingNote {
+  type: string;
+  value: string;
+}

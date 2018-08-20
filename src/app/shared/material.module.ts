@@ -28,7 +28,8 @@ import {
   MatBadgeModule,
   MatBottomSheetModule,
   MatTooltipModule,
-  MatProgressBarModule
+  MatProgressBarModule,
+  MatChipsModule
 } from '@angular/material';
 
 @NgModule({
@@ -61,7 +62,8 @@ import {
     MatBottomSheetModule,
     MatButtonToggleModule,
     MatTooltipModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatChipsModule
   ],
   exports: [
     MatButtonModule,
@@ -93,6 +95,7 @@ import {
     MatButtonToggleModule,
     MatTooltipModule,
     MatProgressBarModule,
+    MatChipsModule,
 
   ]
 })

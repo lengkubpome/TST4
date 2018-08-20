@@ -1,5 +1,5 @@
 import { ValidatorFn, AbstractControl } from '@angular/forms';
-import { Product } from '../product.model';
+import { Product } from '../../../shared/models/product.model';
 
 
 export function forbiddenProducts(products: Product[]): ValidatorFn {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Weighting } from './weighting.model';
+import { Weighting } from '../../shared/models/weighting.model';
 
 import * as fromWeightLoading from './store/weight-loading.reducer';
 import * as WeightLoading from './store/weight-loading.actions';
@@ -68,7 +68,7 @@ const Dummy_Weight: Weighting[] = [
     dateLoadIn: new Date(Date.now()),
     dateLoadOut: new Date(Date.now()),
     car: '80-2155',
-    customer: '',
+    vendor: '',
     product: 'เศษเหล็ก',
     price: 10.10,
     weightIn: 13945,
@@ -83,7 +83,7 @@ const Dummy_Weight: Weighting[] = [
     dateLoadIn: new Date(Date.now()),
     dateLoadOut: new Date(Date.now()),
     car: '1415',
-    customer: '',
+    vendor: '',
     product: 'กล่อง',
     price: 10.10,
     weightIn: 2705,
@@ -98,14 +98,14 @@ const Dummy_Weight: Weighting[] = [
     dateLoadIn: new Date(Date.now()),
     dateLoadOut: new Date(Date.now()),
     car: '9974',
-    customer: '',
+    vendor: '',
     product: 'เศษเหล็กหนา',
     price: 10.00,
     weightIn: 1955,
-    weightOut: 1840,
-    totalWeight: 115,
-    amount: 1150,
+    weightOut: 0,
+    totalWeight: 0,
+    amount: 0,
     type: 'buy',
-    state: 'completed'
+    state: 'waiting'
   }
 ];

@@ -1,5 +1,5 @@
 import { MatTableDataSource, MatSort } from '@angular/material';
-import { Weighting } from '../weighting.model';
+import { Weighting } from '../../../shared/models/weighting.model';
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 

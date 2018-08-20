@@ -6,7 +6,7 @@ import {
   ADD_WEIGHT_LOADING_OUT,
   SET_ROUTE
 } from './weight-loading.actions';
-import { Weighting } from '../weighting.model';
+import { Weighting } from '../../../shared/models/weighting.model';
 
 import * as fromRoot from '../../../app.reducer';
 import { createFeatureSelector, createSelector } from '@ngrx/store';
@@ -15,6 +15,7 @@ export interface WeightLoadingState {
   routeName: string;
   listWeightLoading: Weighting[];
   weightLoadingId: string;
+  getWeightFromDevice: number;
 }
 
 export interface State extends fromRoot.State {
@@ -24,7 +25,8 @@ export interface State extends fromRoot.State {
 const initialState: WeightLoadingState = {
   routeName: '',
   listWeightLoading: [],
-  weightLoadingId: ''
+  weightLoadingId: '',
+  getWeightFromDevice: 0
 };
 
 export function weightLoadingReducer(state = initialState, action: WeightLoadingActions) {
@@ -50,7 +52,7 @@ export function weightLoadingReducer(state = initialState, action: WeightLoading
     case ADD_WEIGHT_LOADING_IN:
       const lastID = state.weightLoadingId + 1;
       const chkLength = lastID.toString().length;
-      const currentID = 'WL' + (new Date()).getFullYear() + '/' + '0'.repeat(5 - chkLength) + lastID;
+      const currentID = 'WL' + new Date().getFullYear() + '/' + '0'.repeat(5 - chkLength) + lastID;
       action.payload.id = currentID;
 
       return {
@@ -75,5 +77,11 @@ export function weightLoadingReducer(state = initialState, action: WeightLoading
 export const getWeightLoadingState = createFeatureSelector<WeightLoadingState>('weightLoading');
 
 export const getRoute = createSelector(getWeightLoadingState, (state: WeightLoadingState) => state.routeName);
-export const getListWeightLoading = createSelector(getWeightLoadingState, (state: WeightLoadingState) => state.listWeightLoading);
-export const getWeightLoadingId = createSelector(getWeightLoadingState, (state: WeightLoadingState) => state.weightLoadingId);
+export const getListWeightLoading = createSelector(
+  getWeightLoadingState,
+  (state: WeightLoadingState) => state.listWeightLoading
+);
+export const getWeightLoadingId = createSelector(
+  getWeightLoadingState,
+  (state: WeightLoadingState) => state.weightLoadingId
+);

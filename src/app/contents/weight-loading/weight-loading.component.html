@@ -1,7 +1,7 @@
 <div fxLayout="column">
   <mat-toolbar>
     <div fxFlex fxLayout="row" fxLayoutAlign="start center">
-      <a class="header-main"
+      <a class="header-link"
         [routerLink]="['../weight-loadings']"
         (click)="showRoute=''">รายการชั่งน้ำหนัก</a>
       <mat-icon *ngIf="showRoute !== ''">chevron_right</mat-icon>
@@ -12,17 +12,31 @@
 
     <div fxFlex fxLayout fxLayoutAlign="flex-end">
       <div *ngIf="showRoute === ''">
-        <button mat-icon-button [routerLink]="['past-list']">
-          <mat-icon>history</mat-icon>
+
+        <button mat-icon-button type="button" #btnMenu [matMenuTriggerFor]="menu">
+          <mat-icon>more_vert</mat-icon>
         </button>
-        <button mat-icon-button [routerLink]="['recently-deleted']" >
-          <mat-icon>delete</mat-icon>
-        </button>
+
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item type="button" [routerLink]="['past-list']">
+            <mat-icon>history</mat-icon>
+            <span>รายการย้อนหลัง</span>
+          </button>
+          <button mat-menu-item type="button" [routerLink]="['recently-deleted']">
+            <mat-icon>delete</mat-icon>
+            <span>รายการลบ</span>
+          </button>
+          <button mat-menu-item type="button" [routerLink]="['recently-deleted']">
+            <mat-icon>settings</mat-icon>
+            <span>ตั้งค่าเครื่องชั่งน้ำหนัก</span>
+          </button>
+        </mat-menu>
+
       </div>
 
       <div *ngIf="showRoute !== ''">
-          <button mat-icon-button [routerLink]="['../weight-loadings']" >
-              <mat-icon>close</mat-icon>
+          <button mat-icon-button class="header-link" [routerLink]="['../weight-loadings']" >
+              <mat-icon>arrow_back</mat-icon>
             </button>
       </div>
 

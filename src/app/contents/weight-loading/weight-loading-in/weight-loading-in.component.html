@@ -10,12 +10,12 @@
         </div>
 
         <div class="end" fxLayoutGap="10px">
-          <button mat-icon-button type="button" class="note">
+        <!--   <button mat-icon-button type="button" class="note">
             <mat-icon [matBadge]="notes.length" matBadgeColor="warn" [matBadgeHidden]="notes.length === 0" (click)="onShowNoteDetail()">note</mat-icon>
 
           </button>
 
-          <!-- <button mat-icon-button type="button" [matMenuTriggerFor]="menu">
+          <button mat-icon-button type="button" [matMenuTriggerFor]="menu">
             <mat-icon>more_vert</mat-icon>
           </button>
 
@@ -39,7 +39,7 @@
             <mat-error>กรุณาใส่ทะเบียนรถ</mat-error>
           </mat-form-field>
           <mat-form-field fxFlex>
-            <input matInput type="text" placeholder="ลูกค้า" formControlName="customer" >
+            <input matInput type="text" placeholder="ผู้ขาย" formControlName="vendor" >
           </mat-form-field>
         </div>
 
