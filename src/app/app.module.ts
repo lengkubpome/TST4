@@ -35,7 +35,6 @@ import { reducers } from './app.reducer';
     ReactiveFormsModule,
     SharedModule,
     StoreModule.forRoot(reducers),
-
     AuthModule,
 
   ],

@@ -1,4 +1,6 @@
 import { NgModule } from '@angular/core';
+import {CdkTableModule} from '@angular/cdk/table';
+import {CdkTreeModule} from '@angular/cdk/tree';
 import {
   MatButtonModule,
   MatIconModule,
@@ -29,43 +31,14 @@ import {
   MatBottomSheetModule,
   MatTooltipModule,
   MatProgressBarModule,
-  MatChipsModule
+  MatChipsModule,
+  MatTreeModule
 } from '@angular/material';
 
 @NgModule({
   imports: [
-    MatButtonModule,
-    MatIconModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatCheckboxModule,
-    MatSidenavModule,
-    MatToolbarModule,
-    MatListModule,
-    MatTabsModule,
-    MatCardModule,
-    MatSelectModule,
-    MatProgressSpinnerModule,
-    MatDialogModule,
-    MatTableModule,
-    MatSortModule,
-    MatPaginatorModule,
-    MatSnackBarModule,
-    MatGridListModule,
-    MatDividerModule,
-    MatMenuModule,
-    MatAutocompleteModule,
-    MatExpansionModule,
-    MatBadgeModule,
-    MatBottomSheetModule,
-    MatButtonToggleModule,
-    MatTooltipModule,
-    MatProgressBarModule,
-    MatChipsModule
-  ],
-  exports: [
+    CdkTableModule,
+    CdkTreeModule,
     MatButtonModule,
     MatIconModule,
     MatInputModule,
@@ -96,7 +69,42 @@ import {
     MatTooltipModule,
     MatProgressBarModule,
     MatChipsModule,
-
+    MatTreeModule
+  ],
+  exports: [
+    CdkTableModule,
+    CdkTreeModule,
+    MatButtonModule,
+    MatIconModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatCheckboxModule,
+    MatSidenavModule,
+    MatToolbarModule,
+    MatListModule,
+    MatTabsModule,
+    MatCardModule,
+    MatSelectModule,
+    MatProgressSpinnerModule,
+    MatDialogModule,
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
+    MatSnackBarModule,
+    MatGridListModule,
+    MatDividerModule,
+    MatMenuModule,
+    MatAutocompleteModule,
+    MatExpansionModule,
+    MatBadgeModule,
+    MatBottomSheetModule,
+    MatButtonToggleModule,
+    MatTooltipModule,
+    MatProgressBarModule,
+    MatChipsModule,
+    MatTreeModule
   ]
 })
 export class MaterialModule { }

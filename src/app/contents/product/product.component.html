@@ -1,0 +1,53 @@
+<div fxLayout="column">
+  <mat-toolbar>
+    <div fxFlex fxLayout="row" fxLayoutAlign="start center">
+      <a class="header-link"
+        [routerLink]="['../product']"
+        (click)="showRoute=''">รายการสินค้า</a>
+      <!-- <mat-icon *ngIf="showRoute !== ''">chevron_right</mat-icon>
+      <span *ngIf="showRoute === 'history'"> รายการบันทึก</span>
+      <span *ngIf="showRoute === 'deleted'"> รายการถูกลบ</span> -->
+    </div>
+
+<!--
+    <div fxFlex fxLayout fxLayoutAlign="flex-end">
+      <div *ngIf="showRoute === ''">
+
+        <button mat-icon-button type="button" #btnMenu [matMenuTriggerFor]="menu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item type="button" [routerLink]="['past-list']">
+            <mat-icon>history</mat-icon>
+            <span>รายการย้อนหลัง</span>
+          </button>
+          <button mat-menu-item type="button" [routerLink]="['recently-deleted']">
+            <mat-icon>delete</mat-icon>
+            <span>รายการลบ</span>
+          </button>
+          <button mat-menu-item type="button" [routerLink]="['recently-deleted']">
+            <mat-icon>settings</mat-icon>
+            <span>ตั้งค่าเครื่องชั่งน้ำหนัก</span>
+          </button>
+        </mat-menu>
+
+      </div>
+
+      <div *ngIf="showRoute !== ''">
+          <button mat-icon-button class="header-link" [routerLink]="['../weight-loadings']" >
+              <mat-icon>arrow_back</mat-icon>
+            </button>
+      </div>
+
+
+    </div> -->
+
+  </mat-toolbar>
+
+  <div class="content">
+    <router-outlet></router-outlet>
+
+  </div>
+
+</div>

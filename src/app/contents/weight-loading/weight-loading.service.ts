@@ -1,8 +1,11 @@
+import { Dummy_Product } from './../../shared/models/product.model';
 import { Injectable } from '@angular/core';
 import { Weighting } from '../../shared/models/weighting.model';
 
 import * as fromWeightLoading from './store/weight-loading.reducer';
 import * as WeightLoading from './store/weight-loading.actions';
+import * as productAct from '../product/store/product.action';
+
 import { Store } from '@ngrx/store';
 
 @Injectable()
@@ -12,6 +15,7 @@ export class WeightLoadingService {
   private weightLoadingId: number = Dummy_doc_id.weightLoadingID;
 
   constructor(private store: Store<fromWeightLoading.State>) {
+    // this.store.dispatch(new productAct.SetListProduct(Dummy_Product));
   }
 
   fetchListWeightLoading() {

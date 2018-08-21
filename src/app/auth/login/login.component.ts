@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 
 import * as fromRoot from '../../app.reducer';
-import * as UI from '../../shared/ui.actions';
+import * as UI from '../../shared/store/ui.actions';
 
 
 @Component({

@@ -1,0 +1,42 @@
+button.btn-header {
+  margin: 16px 8px;
+}
+
+.search {
+  // margin-bottom: -20px;
+  mat-icon {
+    color: rgba(0, 0, 0, 0.5);
+  }
+}
+
+
+table {
+  // min-width: 500px;
+  // width: 100%;
+}
+
+tr.example-detail-row {
+  height: 0;
+}
+
+tr.element-row:not(.example-expanded-row):hover {
+  background: #f5f5f5;
+}
+
+tr.element-row:not(.example-expanded-row):active {
+  background: #efefef;
+}
+
+.elemet-cell-right {
+   text-align: right;
+
+}
+
+.element-row td {
+  border-bottom-width: 0;
+}
+
+.element-expand-detail {
+  overflow: hidden;
+  display: flex;
+}

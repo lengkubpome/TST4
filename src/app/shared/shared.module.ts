@@ -5,19 +5,25 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { MaterialModule } from './material.module';
 
+// Directive
+import { InputTrimModule } from 'ng2-trim-directive';
+
 @NgModule({
 
   imports: [
     CommonModule,
     // FormsModule,
     MaterialModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    InputTrimModule,
+
   ],
   exports: [
     CommonModule,
     FormsModule,
     MaterialModule,
     FlexLayoutModule,
+    InputTrimModule
   ]
 })
 export class SharedModule { }

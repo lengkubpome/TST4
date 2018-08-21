@@ -6,9 +6,11 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Observable } from 'rxjs';
 import { map, startWith, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
-import { Product, Dummy_Product } from '../../../shared/models/product.model';
-import { forbiddenProducts } from '../shared/forbidden-products';
+import { Product } from '../../../shared/models/product.model';
+import { allowedProducts } from '../../../shared/custom-validator-fn/validator-products';
+import { Store } from '@ngrx/store';
 
+import * as fromApp from '../../../app.reducer';
 @Component({
   selector: 'tst-weight-loading-in',
   templateUrl: './weight-loading-in.component.html',
@@ -20,12 +22,15 @@ export class WeightLoadingInComponent implements OnInit {
   filteredProducts: Observable<Product[]>;
 
   constructor(
-    public dialogRef: MatDialogRef<WeightLoadingInComponent>,
+    private store: Store<fromApp.State>,
+    private dialogRef: MatDialogRef<WeightLoadingInComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder,
     private weightLoadingService: WeightLoadingService
   ) {
-    this.products = Dummy_Product;
+    this.store.select(fromApp.getListProduct).subscribe((products: Product[]) => {
+      this.products = products;
+    });
   }
 
   ngOnInit() {
@@ -34,7 +39,7 @@ export class WeightLoadingInComponent implements OnInit {
       vendor: [{ value: '', disabled: false }],
       product: [
         { value: '', disabled: false },
-        Validators.compose([Validators.required, forbiddenProducts(this.products)])
+        Validators.compose([Validators.required, allowedProducts(this.products)])
       ],
       price: [{ value: 0, disabled: false }, Validators.compose([Validators.required])],
       type: [{ value: 'buy', disabled: false }],

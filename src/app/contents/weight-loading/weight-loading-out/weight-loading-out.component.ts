@@ -6,7 +6,7 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 
 import { Observable } from 'rxjs';
 import { startWith, map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { forbiddenProducts } from '../shared/forbidden-products';
+import { allowedProducts } from '../../../shared/custom-validator-fn/validator-products';
 
 import { Weighting, WeightingNote } from '../../../shared/models/weighting.model';
 import { Product, Dummy_Product } from '../../../shared/models/product.model';
@@ -14,6 +14,8 @@ import { CutWeightComponent } from './cut-weight/cut-weight.component';
 
 import { WeightLoadingService } from '../weight-loading.service';
 
+import { Store } from '@ngrx/store';
+import * as fromApp from '../../../app.reducer';
 
 
 @Component({
@@ -44,6 +46,7 @@ export class WeightLoadingOutComponent implements OnInit {
   @ViewChild('btnCancel') btnCancel: HTMLButtonElement;
 
   constructor(
+    private store: Store<fromApp.State>,
     public dialogRef: MatDialogRef<WeightLoadingOutComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialog: MatDialog,
@@ -51,7 +54,9 @@ export class WeightLoadingOutComponent implements OnInit {
     private weightLoadingService: WeightLoadingService,
     private printService: WeightPrintService
   ) {
-    this.products = Dummy_Product;
+    this.store.select(fromApp.getListProduct).subscribe((products: Product[]) => {
+      this.products = products;
+    });
   }
 
   ngOnInit() {
@@ -62,7 +67,7 @@ export class WeightLoadingOutComponent implements OnInit {
       vendor: [{ value: this.weightLoading.vendor, disabled: false }],
       product: [
         { value: this.weightLoading.product, disabled: false },
-        Validators.compose([Validators.required, forbiddenProducts(this.products)])
+        Validators.compose([Validators.required, allowedProducts(this.products)])
       ],
       price: [{ value: this.weightLoading.price, disabled: false }, Validators.compose([Validators.required])],
       type: [{ value: this.weightLoading.type, disabled: false }],
