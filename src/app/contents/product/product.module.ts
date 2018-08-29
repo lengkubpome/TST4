@@ -8,9 +8,9 @@ import { ListProductComponent } from './list-product/list-product.component';
 
 import { ProductService } from './product.service';
 import { CreateProductComponent } from './create-product/create-product.component';
-import { EditProductComponent } from './edit-product/edit-product.component';
-import { DeleteProductComponent } from './delete-product/delete-product.component';
 import { LogProductComponent } from './log-product/log-product.component';
+import { InfoProductComponent } from './info-product/info-product.component';
+import { DeleteProductComponent } from './info-product/delete/delete-product.component';
 
 @NgModule({
   imports: [ReactiveFormsModule, SharedModule, ProductRoutingModule],
@@ -18,11 +18,11 @@ import { LogProductComponent } from './log-product/log-product.component';
     ProductComponent,
     ListProductComponent,
     CreateProductComponent,
-    EditProductComponent,
-    DeleteProductComponent,
-    LogProductComponent
+    LogProductComponent,
+    InfoProductComponent,
+    DeleteProductComponent
   ],
   providers: [ProductService],
-  entryComponents: [CreateProductComponent, EditProductComponent, DeleteProductComponent]
+  entryComponents: [CreateProductComponent, InfoProductComponent, DeleteProductComponent]
 })
 export class ProductModule {}

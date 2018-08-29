@@ -30,7 +30,7 @@ export class ListWeightLoadingComponent implements OnInit, AfterViewInit {
     private store: Store<fromWeightLoading.State>,
     private weightLoadingService: WeightLoadingService) {
 
-      store.dispatch(new weightLoadingAction.SetRoute(''));
+      store.dispatch(new weightLoadingAction.SetRoute(null));
 
   }
 

@@ -1,13 +1,12 @@
+import { InfoProductComponent } from './../info-product/info-product.component';
 import { CreateProductComponent } from './../create-product/create-product.component';
-import { EditProductComponent } from './../edit-product/edit-product.component';
 import { ProductService } from './../product.service';
 import { MatTableDataSource, MatSort, MatDialog } from '@angular/material';
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { Store } from '@ngrx/store';
 
-import { Product, Dummy_Product } from './../../../shared/models/product.model';
+import { Product,  } from './../../../shared/models/product.model';
 
-import * as prodcutAction from '../store/product.action';
 import * as fromApp from '../../../app.reducer';
 
 @Component({
@@ -16,9 +15,12 @@ import * as fromApp from '../../../app.reducer';
   styleUrls: ['./list-product.component.scss']
 })
 export class ListProductComponent implements OnInit, AfterViewInit {
-  columnsToDisplay = ['name', 'price', 'function'];
+  columnsToDisplay = ['name', 'price', 'status', 'function'];
   dataSource = new MatTableDataSource<Product>();
   expandedElement: Product;
+
+  editProduct: Product = null;
+  @ViewChild('changePrice') changePrice: ElementRef;
 
   @ViewChild(MatSort) sort: MatSort;
 
@@ -49,17 +51,21 @@ export class ListProductComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onChangePrice(row: Product) {
-    console.log(row);
-    this.dialog.open(EditProductComponent, {
-      data: { mode: 'changePrice', product: row }
-    });
+  onChangePrice(element: Product) {
+    const newPrice = +this.changePrice.nativeElement.value;
+    const productChange: Product = { ...element, price: newPrice };
+
+    if (element.price !== newPrice) {
+      this.productService.editProduct(element, productChange);
+    }
+    this.editProduct = null;
   }
 
-  onEditProduct(row: Product) {
-    console.log(row);
-    this.dialog.open(EditProductComponent, {
-      data: { mode: 'editProduct', product: row }
+  onInfoProduct(product: Product) {
+    this.dialog.open(InfoProductComponent, {
+      width: '90%',
+      maxWidth: '400px',
+      data: product
     });
   }
 }

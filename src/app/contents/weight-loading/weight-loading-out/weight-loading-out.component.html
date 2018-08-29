@@ -46,17 +46,20 @@
           <span matTooltipPosition="below" matTooltip="ลำดับการชั่ง">{{ weightLoading.id }}</span>
         </div>
 
-        <div fxLayout.gt-sm="row" fxLayout.xs="column">
+        <div fxLayout.gt-sm="row" fxLayout.xs="column" fxLayoutGap.gt-sm="10px">
           <mat-form-field fxFlex>
             <input matInput type="text" placeholder="ทะเบียนรถ" formControlName="car">
             <mat-error>กรุณาใส่ทะเบียนรถ</mat-error>
           </mat-form-field>
-          <mat-form-field fxFlex>
-            <input matInput type="text" placeholder="ลูกค้า" formControlName="vendor">
+          <mat-form-field fxFlex *ngIf="this.weightLoadingOutForm.get('type').value === 'buy'" >
+            <input matInput type="text" placeholder="ผู้ซื้อ" formControlName="vendor">
+          </mat-form-field>
+          <mat-form-field fxFlex *ngIf="this.weightLoadingOutForm.get('type').value === 'sell'">
+            <input matInput type="text" placeholder="ลูกค้า" formControlName="customer">
           </mat-form-field>
         </div>
 
-        <div fxLayout="row">
+        <div fxLayout="row" fxLayoutGap="10px">
           <mat-form-field fxFlex="50%">
             <input matInput type="text" placeholder="สินค้า" formControlName="product" [matAutocomplete]="auto">
             <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
@@ -95,7 +98,7 @@
 
         </div>
         <!-- Additional -->
-        <mat-nav-list *ngIf="notes!==null">
+        <mat-nav-list *ngIf="notes.length > 0">
           <h4>เพิ่มเติม</h4>
           <mat-list-item class="cut-weight" *ngIf="cutWeight!==null" (click)="onShowCutWeight()">
             <mat-label>
@@ -133,7 +136,7 @@
       </div>
 
     </mat-dialog-content>
-    <mat-divider></mat-divider>
+    <mat-divider class="bottom"></mat-divider>
     <mat-dialog-actions fxLayout="column">
 
       <div fxLayout="row" fxLayoutAlign="space-between center" *ngIf="!loadingMode">

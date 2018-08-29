@@ -17,4 +17,6 @@ const getUiState = createFeatureSelector<fromUi.State>('ui');
 export const getIsLoading = createSelector(getUiState, fromUi.getIsLoading);
 
 const getProductState = createFeatureSelector<fromProduct.State>('product');
-export const getListProduct = createSelector(getProductState, (state: fromProduct.State) => state.listProduct);
+// export const getListProduct = createSelector(getProductState, (state: fromProduct.State) => state.listProduct);
+export const getListProduct = createSelector(getProductState, fromProduct.getProduct);
+export const getProductLog = createSelector(getProductState, fromProduct.getProductLog);

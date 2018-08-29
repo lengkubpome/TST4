@@ -30,10 +30,10 @@ $app-theme: mat-light-theme($app-primary, $app-accent);
   .buy-mode {
     background: mat-color($primary);
   }
-  mat-dialog-actions {
+  .mat-dialog-actions {
     bottom: 0;
   }
-  mat-divider {
+  .mat-divider.bottom {
     margin: 0 -24px;
   }
   .input-right {

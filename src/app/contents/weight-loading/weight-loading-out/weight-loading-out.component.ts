@@ -17,7 +17,6 @@ import { WeightLoadingService } from '../weight-loading.service';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../../app.reducer';
 
-
 @Component({
   selector: 'tst-weight-loading-out',
   templateUrl: './weight-loading-out.component.html',
@@ -65,6 +64,7 @@ export class WeightLoadingOutComponent implements OnInit {
     this.weightLoadingOutForm = this.fb.group({
       car: [{ value: this.weightLoading.car, disabled: false }, Validators.required],
       vendor: [{ value: this.weightLoading.vendor, disabled: false }],
+      customer: [{ value: this.weightLoading.customer, disabled: false }],
       product: [
         { value: this.weightLoading.product, disabled: false },
         Validators.compose([Validators.required, allowedProducts(this.products)])
@@ -94,9 +94,11 @@ export class WeightLoadingOutComponent implements OnInit {
       if (value === 'sell') {
         this.showCutWeight = false;
         this.onResetCutWeight();
+        this.weightLoadingOutForm.get('vendor').setValue(this.weightLoading.vendor);
         this.weightLoadingOutForm.get('price').disable();
       } else {
         this.showCutWeight = this.showCutWeight;
+        this.weightLoadingOutForm.get('customer').setValue(this.weightLoading.customer);
         this.weightLoadingOutForm.get('price').enable();
       }
 
@@ -131,6 +133,9 @@ export class WeightLoadingOutComponent implements OnInit {
         distinctUntilChanged()
       )
       .subscribe(() => this.calculateWeightLoading());
+
+
+
   }
 
   private changePrice() {
@@ -169,7 +174,6 @@ export class WeightLoadingOutComponent implements OnInit {
 
       this.notes = this.notes.filter(res => res.type !== 'cutWeight');
       this.notes.push({ type: 'cutWeight', value: noteCutWeight });
-
     }
     this.calculateWeightLoading();
   }
@@ -243,6 +247,7 @@ export class WeightLoadingOutComponent implements OnInit {
       dateLoadOut: new Date(Date.now()),
       car: this.weightLoadingOutForm.get('car').value,
       vendor: this.weightLoadingOutForm.get('vendor').value,
+      customer: this.weightLoadingOutForm.get('customer').value,
       product: this.weightLoadingOutForm.get('product').value,
       price: this.weightLoadingOutForm.get('price').value,
       weightIn: this.weightLoading.weightIn,
@@ -255,10 +260,13 @@ export class WeightLoadingOutComponent implements OnInit {
       notes: this.notes
     };
 
+    console.log(weighting);
+
+
     // TODO: สร้างระบบให้เช็คว่าบันทึกข้อมูลผ่านหรือไม่
-    this.weightLoadingService.recordWeightLoadingOut(weighting);
-    this.printService.printBillWeight(weighting);
-    this.dialogRef.close();
+    // this.weightLoadingService.recordWeightLoadingOut(weighting);
+    // this.printService.printBillWeight(weighting);
+    // this.dialogRef.close();
   }
 
   saveData() {
@@ -267,7 +275,6 @@ export class WeightLoadingOutComponent implements OnInit {
     // this.btnCancel.disabled = true;
     // this.weightLoadingOutForm.disable();
     // this.loadingMode = true;
-
   }
 
   filterProducts(val: any): Product[] {

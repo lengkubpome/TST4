@@ -7,6 +7,7 @@ export interface Weighting {
   car: string;
   // vendor?: Vendor;
   vendor?: string;
+  customer?: string;
   product: string;
   price: number;
   weightIn: number;

@@ -33,18 +33,21 @@
       <div>
         <h4>รายละเอียด</h4>
 
-        <div fxLayout.gt-sm="row" fxLayout.xs="column">
+        <div fxLayout.gt-sm="row" fxLayout.xs="column" fxLayoutGap.gt-sm="10px">
           <mat-form-field fxFlex>
             <input matInput type="text" placeholder="ทะเบียนรถ" cdkFocusInitial formControlName="car">
             <mat-error>กรุณาใส่ทะเบียนรถ</mat-error>
           </mat-form-field>
-          <mat-form-field fxFlex>
-            <input matInput type="text" placeholder="ผู้ขาย" formControlName="vendor" >
-          </mat-form-field>
+          <mat-form-field fxFlex *ngIf="this.weightLoadingInForm.get('type').value === 'buy'" >
+              <input matInput type="text" placeholder="ผู้ซื้อ" formControlName="vendor">
+            </mat-form-field>
+            <mat-form-field fxFlex *ngIf="this.weightLoadingInForm.get('type').value === 'sell'">
+              <input matInput type="text" placeholder="ลูกค้า" formControlName="customer">
+            </mat-form-field>
         </div>
 
 
-        <div fxLayout="row">
+        <div fxLayout="row" fxLayoutGap="10px">
           <mat-form-field fxFlex="50%">
             <input matInput type="text" placeholder="สินค้า" formControlName="product" [matAutocomplete]="auto">
             <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">

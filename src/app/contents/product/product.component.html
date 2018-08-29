@@ -9,7 +9,7 @@
       <span *ngIf="showRoute === 'deleted'"> รายการถูกลบ</span> -->
     </div>
 
-<!--
+
     <div fxFlex fxLayout fxLayoutAlign="flex-end">
       <div *ngIf="showRoute === ''">
 
@@ -20,16 +20,9 @@
         <mat-menu #menu="matMenu">
           <button mat-menu-item type="button" [routerLink]="['past-list']">
             <mat-icon>history</mat-icon>
-            <span>รายการย้อนหลัง</span>
+            <span>รายการบันทึก</span>
           </button>
-          <button mat-menu-item type="button" [routerLink]="['recently-deleted']">
-            <mat-icon>delete</mat-icon>
-            <span>รายการลบ</span>
-          </button>
-          <button mat-menu-item type="button" [routerLink]="['recently-deleted']">
-            <mat-icon>settings</mat-icon>
-            <span>ตั้งค่าเครื่องชั่งน้ำหนัก</span>
-          </button>
+
         </mat-menu>
 
       </div>
@@ -41,7 +34,7 @@
       </div>
 
 
-    </div> -->
+    </div>
 
   </mat-toolbar>
 

@@ -37,6 +37,7 @@ export class WeightLoadingInComponent implements OnInit {
     this.weightLoadingInForm = this.fb.group({
       car: [{ value: '', disabled: false }, Validators.required],
       vendor: [{ value: '', disabled: false }],
+      customer: [{ value: '', disabled: false }],
       product: [
         { value: '', disabled: false },
         Validators.compose([Validators.required, allowedProducts(this.products)])
@@ -60,8 +61,10 @@ export class WeightLoadingInComponent implements OnInit {
     //Type Change
     this.weightLoadingInForm.get('type').valueChanges.subscribe(value => {
       if (value === 'sell') {
+        this.weightLoadingInForm.get('vendor').setValue('');
         this.weightLoadingInForm.get('price').disable();
       } else {
+        this.weightLoadingInForm.get('customer').setValue('');
         this.weightLoadingInForm.get('price').enable();
       }
       this.changePrice();
@@ -103,6 +106,7 @@ export class WeightLoadingInComponent implements OnInit {
       dateLoadOut: null,
       car: this.weightLoadingInForm.get('car').value,
       vendor: this.weightLoadingInForm.get('vendor').value,
+      customer: this.weightLoadingInForm.get('customer').value,
       product: this.weightLoadingInForm.get('product').value,
       price: this.weightLoadingInForm.get('price').value,
       weightIn: this.getWeightLoadingFromDevice(),

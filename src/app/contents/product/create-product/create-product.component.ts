@@ -1,3 +1,4 @@
+import { MatDialogRef } from '@angular/material';
 import { ProductService } from './../product.service';
 import { Product } from '../../../shared/models/product.model';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -16,7 +17,9 @@ export class CreateProductComponent implements OnInit {
   createProductForm: FormGroup;
   products: Product[] = [];
 
-  constructor(private fb: FormBuilder, private store: Store<fromApp.State>,private productService: ProductService) {
+  constructor(
+    private dialogRef: MatDialogRef<CreateProductComponent>,
+    private fb: FormBuilder, private store: Store<fromApp.State>, private productService: ProductService) {
     this.store.select(fromApp.getListProduct).subscribe((products: Product[]) => {
       this.products = products;
     });
@@ -30,6 +33,7 @@ export class CreateProductComponent implements OnInit {
   }
 
   onSubmit() {
-    this.productService.createProduct(this.createProductForm.value);
+    this.productService.addProduct(this.createProductForm.value);
+    this.dialogRef.close();
   }
 }

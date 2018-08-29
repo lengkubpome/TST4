@@ -9,7 +9,6 @@ button.btn-header {
   }
 }
 
-
 table {
   // min-width: 500px;
   // width: 100%;
@@ -19,24 +18,61 @@ tr.example-detail-row {
   height: 0;
 }
 
-tr.element-row:not(.example-expanded-row):hover {
+tr.element-row:not(.element-row-edit):hover {
   background: #f5f5f5;
 }
 
-tr.element-row:not(.example-expanded-row):active {
+tr.element-row:not(.element-row-edit):active {
   background: #efefef;
 }
 
-.elemet-cell-right {
-   text-align: right;
+tr.element-row-edit {
+  background-color: rgba(63, 81, 181, 0.2);
+}
 
+.inactive > td {
+
+  color: red;
+}
+
+.mat-row {
+  height: 60px;
+}
+
+.mat-column-name {
+  width: 30%;
+}
+
+.mat-column-price {
+  width: 30%;
+}
+
+.mat-column-status {
+  width: 30%
+}
+
+.mat-column-function {
+  text-align: right;
+  width: 10%
 }
 
 .element-row td {
   border-bottom-width: 0;
 }
 
-.element-expand-detail {
-  overflow: hidden;
-  display: flex;
+input.change-price {
+  width: 100px;
+  padding: 10px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+  outline: none;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+input.change-price:focus {
+  border: 2px solid #3f51b5;
 }

@@ -18,6 +18,7 @@ import { WeightPrintService } from './shared/weight-print.service';
 
 import { StoreModule } from '@ngrx/store';
 import { weightLoadingReducer } from './store/weight-loading.reducer';
+import { ConnectWeightDeviceComponent } from './connect-weight-device/connect-weight-device.component';
 
 const routes: Routes = [
   {
@@ -26,7 +27,8 @@ const routes: Routes = [
     children: [
       { path: '', component: ListWeightLoadingComponent },
       { path: 'past-list', component: PastWeightLoadingComponent },
-      { path: 'recently-deleted', component: DeletedWeightLoadingComponent }
+      { path: 'recently-deleted', component: DeletedWeightLoadingComponent },
+      { path: 'connect-device', component: ConnectWeightDeviceComponent },
     ]
   }
 ];
@@ -40,7 +42,8 @@ const routes: Routes = [
     WeightLoadingOutComponent,
     CutWeightComponent,
     DeletedWeightLoadingComponent,
-    CancelDialogComponent
+    CancelDialogComponent,
+    ConnectWeightDeviceComponent
   ],
   imports: [
     ReactiveFormsModule,

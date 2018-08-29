@@ -3,15 +3,16 @@
     <div fxFlex fxLayout="row" fxLayoutAlign="start center">
       <a class="header-link"
         [routerLink]="['../weight-loadings']"
-        (click)="showRoute=''">รายการชั่งน้ำหนัก</a>
-      <mat-icon *ngIf="showRoute !== ''">chevron_right</mat-icon>
+        (click)="showRoute=null">รายการชั่งน้ำหนัก</a>
+      <mat-icon *ngIf="showRoute !== null">chevron_right</mat-icon>
       <span *ngIf="showRoute === 'history'"> รายการบันทึก</span>
       <span *ngIf="showRoute === 'deleted'"> รายการถูกลบ</span>
+      <span *ngIf="showRoute === 'connect-device'">ตั้งค่าเครื่องชั่ง</span>
     </div>
 
 
     <div fxFlex fxLayout fxLayoutAlign="flex-end">
-      <div *ngIf="showRoute === ''">
+      <div *ngIf="showRoute === null">
 
         <button mat-icon-button type="button" #btnMenu [matMenuTriggerFor]="menu">
           <mat-icon>more_vert</mat-icon>
@@ -26,7 +27,7 @@
             <mat-icon>delete</mat-icon>
             <span>รายการลบ</span>
           </button>
-          <button mat-menu-item type="button" [routerLink]="['recently-deleted']">
+          <button mat-menu-item type="button" [routerLink]="['connect-device']">
             <mat-icon>settings</mat-icon>
             <span>ตั้งค่าเครื่องชั่งน้ำหนัก</span>
           </button>
@@ -34,7 +35,7 @@
 
       </div>
 
-      <div *ngIf="showRoute !== ''">
+      <div *ngIf="showRoute !== null">
           <button mat-icon-button class="header-link" [routerLink]="['../weight-loadings']" >
               <mat-icon>arrow_back</mat-icon>
             </button>

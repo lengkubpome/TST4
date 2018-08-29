@@ -19,17 +19,17 @@ export class SetListProductChangeLog implements Action {
 
 export class AddProduct implements Action {
   readonly type = ADD_PRODUCT;
-  constructor(public payload: Product) {}
+  constructor(public product: Product, public recoder: string) {}
 }
 
 export class EditProduct implements Action {
   readonly type = EDIT_PRODUCT;
-  constructor(public payload: Product) {}
+  constructor(public productFrom: Product, public productChanged, public recoder: string) {}
 }
 
 export class DeleteProduct implements Action {
   readonly type = DELETE_PRODUCT;
-  constructor(public payload: Product) {}
+  constructor(public product: Product, public recoder: string) {}
 }
 
 export type ProductAction = SetListProduct | SetListProductChangeLog | AddProduct | EditProduct | DeleteProduct;
