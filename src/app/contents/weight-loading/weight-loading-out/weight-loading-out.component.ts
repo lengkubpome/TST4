@@ -133,9 +133,6 @@ export class WeightLoadingOutComponent implements OnInit {
         distinctUntilChanged()
       )
       .subscribe(() => this.calculateWeightLoading());
-
-
-
   }
 
   private changePrice() {
@@ -257,11 +254,11 @@ export class WeightLoadingOutComponent implements OnInit {
       amount: this.weightLoading.amount,
       type: this.weightLoadingOutForm.get('type').value,
       state: 'completed',
-      notes: this.notes
+      notes: this.notes,
+      recorder: { weightIn: 'Recorder' }
     };
 
     console.log(weighting);
-
 
     // TODO: สร้างระบบให้เช็คว่าบันทึกข้อมูลผ่านหรือไม่
     // this.weightLoadingService.recordWeightLoadingOut(weighting);

@@ -1,3 +1,5 @@
+import { ConnectWeightDeviceComponent } from './connect-weight-device/connect-weight-device.component';
+import { MatDialog } from '@angular/material';
 import { Component, OnInit } from '@angular/core';
 import * as fromWeightLoading from './store/weight-loading.reducer';
 import { Store } from '@ngrx/store';
@@ -10,7 +12,7 @@ import { Store } from '@ngrx/store';
 export class WeightLoadingComponent implements OnInit {
   showRoute = null;
 
-  constructor(private store: Store<fromWeightLoading.State>) {
+  constructor(private dialog: MatDialog, private store: Store<fromWeightLoading.State>) {
     this.store.select(fromWeightLoading.getRoute).subscribe(
       res => {
         // console.log(res);
@@ -21,4 +23,13 @@ export class WeightLoadingComponent implements OnInit {
   }
 
   ngOnInit() {}
+
+  // onSettingDevice(){
+  //   const dialogSetting = this.dialog.open(ConnectWeightDeviceComponent,{
+  //     width: '90%',
+  //     maxWidth: '500px',
+  //     // autoFocus: true,
+  //     disableClose: false
+  //   })
+  // }
 }

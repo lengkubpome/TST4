@@ -1,4 +1,4 @@
-
+import { DeviceService } from './shared/device.service';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -12,13 +12,13 @@ import { WeightLoadingOutComponent } from './weight-loading-out/weight-loading-o
 import { CutWeightComponent } from './weight-loading-out/cut-weight/cut-weight.component';
 import { DeletedWeightLoadingComponent } from './deleted-weight-loading/deleted-weight-loading.component';
 import { CancelDialogComponent } from './weight-loading-out/alert-dialog.component';
+import { ConnectWeightDeviceComponent } from './connect-weight-device/connect-weight-device.component';
 
 import { WeightLoadingService } from './weight-loading.service';
 import { WeightPrintService } from './shared/weight-print.service';
 
 import { StoreModule } from '@ngrx/store';
 import { weightLoadingReducer } from './store/weight-loading.reducer';
-import { ConnectWeightDeviceComponent } from './connect-weight-device/connect-weight-device.component';
 
 const routes: Routes = [
   {
@@ -28,7 +28,7 @@ const routes: Routes = [
       { path: '', component: ListWeightLoadingComponent },
       { path: 'past-list', component: PastWeightLoadingComponent },
       { path: 'recently-deleted', component: DeletedWeightLoadingComponent },
-      { path: 'connect-device', component: ConnectWeightDeviceComponent },
+      { path: 'settings-device', component: ConnectWeightDeviceComponent }
     ]
   }
 ];
@@ -50,9 +50,15 @@ const routes: Routes = [
     SharedModule,
     RouterModule.forChild(routes),
     StoreModule.forFeature('weightLoading', weightLoadingReducer)
+
   ],
-  providers: [WeightLoadingService, WeightPrintService],
+  providers: [WeightLoadingService, WeightPrintService, DeviceService],
   exports: [],
-  entryComponents: [WeightLoadingInComponent, WeightLoadingOutComponent, CancelDialogComponent, CutWeightComponent]
+  entryComponents: [
+    WeightLoadingInComponent,
+    WeightLoadingOutComponent,
+    CancelDialogComponent,
+    CutWeightComponent,
+  ]
 })
-export class WeightLoadingModule {}
+export class WeightLoadingModule { }

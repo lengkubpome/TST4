@@ -10,7 +10,6 @@ import { Store } from '@ngrx/store';
 
 @Injectable()
 export class WeightLoadingService {
-
   private weightList: Weighting[] = Dummy_Weight;
   private weightLoadingId: number = Dummy_doc_id.weightLoadingID;
 
@@ -28,7 +27,6 @@ export class WeightLoadingService {
 
     this.addWeightingToDatabase(weighting);
     this.fetchListWeightLoading();
-
   }
 
   recordWeightLoadingOut(weighting: Weighting) {
@@ -36,7 +34,6 @@ export class WeightLoadingService {
     this.fetchListWeightLoading();
 
     // this.store.dispatch(new WeightLoading.AddWeightLoadingOut(weighting));
-
   }
 
   cancelWeightLoading(weighting: Weighting) {
@@ -56,15 +53,12 @@ export class WeightLoadingService {
     const weightList = [...this.weightList];
     weightList[index] = weighting;
     this.weightList = weightList;
-
   }
-
 }
 
 const Dummy_doc_id = {
   weightLoadingID: 1
 };
-
 
 const Dummy_Weight: Weighting[] = [
   {
@@ -74,13 +68,14 @@ const Dummy_Weight: Weighting[] = [
     car: '80-2155',
     vendor: '',
     product: 'เศษเหล็ก',
-    price: 10.10,
+    price: 10.1,
     weightIn: 13945,
     weightOut: 9060,
     totalWeight: 4885,
     amount: 49339,
     type: 'sell',
-    state: 'completed'
+    state: 'completed',
+    recorder: { weightIn: 'Recorder', weightOut: 'Recorder' }
   },
   {
     id: '2',
@@ -89,13 +84,14 @@ const Dummy_Weight: Weighting[] = [
     car: '1415',
     vendor: '',
     product: 'กล่อง',
-    price: 10.10,
+    price: 10.1,
     weightIn: 2705,
     weightOut: 1565,
     totalWeight: 1140,
     amount: 5130,
     type: 'buy',
-    state: 'completed'
+    state: 'completed',
+    recorder: { weightIn: 'Recorder', weightOut: 'Recorder' }
   },
   {
     id: '3',
@@ -104,12 +100,13 @@ const Dummy_Weight: Weighting[] = [
     car: '9974',
     vendor: '',
     product: 'เศษเหล็กหนา',
-    price: 10.00,
+    price: 10.0,
     weightIn: 1955,
     weightOut: 0,
     totalWeight: 0,
     amount: 0,
     type: 'buy',
-    state: 'waiting'
+    state: 'waiting',
+    recorder: { weightIn: 'Recorder', weightOut: 'Recorder' }
   }
 ];

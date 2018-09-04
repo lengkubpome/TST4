@@ -114,7 +114,8 @@ export class WeightLoadingInComponent implements OnInit {
       totalWeight: 0,
       amount: 0,
       type: this.weightLoadingInForm.get('type').value,
-      state: 'waiting'
+      state: 'waiting',
+      recorder: { weightIn: 'Recorder', weightOut: 'Recorder' }
     };
 
     // console.log(weighting);

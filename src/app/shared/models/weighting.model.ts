@@ -22,6 +22,10 @@ export interface Weighting {
   type: 'buy' | 'sell';
   state: 'waiting' | 'completed' | 'cancelled';
   notes?: WeightingNote[];
+  recorder: {
+    weightIn: string;
+    weightOut?: string;
+  };
 }
 
 export interface WeightingNote {

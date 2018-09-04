@@ -7,7 +7,7 @@
       <mat-icon *ngIf="showRoute !== null">chevron_right</mat-icon>
       <span *ngIf="showRoute === 'history'"> รายการบันทึก</span>
       <span *ngIf="showRoute === 'deleted'"> รายการถูกลบ</span>
-      <span *ngIf="showRoute === 'connect-device'">ตั้งค่าเครื่องชั่ง</span>
+      <span *ngIf="showRoute === 'settings-device'">ตั้งค่าเครื่องชั่ง</span>
     </div>
 
 
@@ -27,7 +27,7 @@
             <mat-icon>delete</mat-icon>
             <span>รายการลบ</span>
           </button>
-          <button mat-menu-item type="button" [routerLink]="['connect-device']">
+          <button mat-menu-item type="button" [routerLink]="['settings-device']">
             <mat-icon>settings</mat-icon>
             <span>ตั้งค่าเครื่องชั่งน้ำหนัก</span>
           </button>

@@ -33,7 +33,8 @@ import {
   MatProgressBarModule,
   MatChipsModule,
   MatTreeModule,
-  MatSlideToggleModule
+  MatSlideToggleModule,
+  MatRadioModule
 } from '@angular/material';
 
 @NgModule({
@@ -71,7 +72,8 @@ import {
     MatProgressBarModule,
     MatChipsModule,
     MatTreeModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatRadioModule,
   ],
   exports: [
     CdkTableModule,
@@ -107,7 +109,8 @@ import {
     MatProgressBarModule,
     MatChipsModule,
     MatTreeModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatRadioModule
   ]
 })
 export class MaterialModule { }
