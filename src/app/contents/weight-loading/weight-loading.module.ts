@@ -1,3 +1,4 @@
+import { AddWeightDeviceComponent } from './connect-weight-device/add-weight-device/add-weight-device.component';
 import { DeviceService } from './shared/device.service';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
@@ -43,7 +44,8 @@ const routes: Routes = [
     CutWeightComponent,
     DeletedWeightLoadingComponent,
     CancelDialogComponent,
-    ConnectWeightDeviceComponent
+    ConnectWeightDeviceComponent,
+    AddWeightDeviceComponent
   ],
   imports: [
     ReactiveFormsModule,

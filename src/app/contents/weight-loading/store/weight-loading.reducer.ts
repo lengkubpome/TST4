@@ -10,10 +10,10 @@ export interface WeightLoadingState {
   listWeightLoading: Weighting[];
   weightLoadingId: string;
   receiveDataFromDevice: number;
-  weightLoadingMode: 'auto' | 'manual';
+  weightLoadingMode: string;
 
-  deviceState: string
-
+  deviceActive: Device;
+  deviceState: { state: string; message: string };
 }
 
 export interface State extends fromRoot.State {
@@ -25,10 +25,10 @@ const initialState: WeightLoadingState = {
   listWeightLoading: [],
   weightLoadingId: '',
   receiveDataFromDevice: 0,
-  weightLoadingMode: 'manual',
+  weightLoadingMode: '',
 
-  deviceState: ''
-
+  deviceActive: null,
+  deviceState: { state: '', message: '' }
 };
 
 export function weightLoadingReducer(state = initialState, action: _action.WeightLoadingActions) {
@@ -76,8 +76,21 @@ export function weightLoadingReducer(state = initialState, action: _action.Weigh
       return {
         ...state,
         weightLoadingMode: action.payload
+      };
+    case _action.SET_DEVICE_ACTIVE:
+      return {
+        ...state,
+        deviceActive: action.payload
+      };
+    case _action.SET_DEVICE_STATE:
+      if (state.deviceState.state === action.payload.state) {
+        return { ...state };
+      } else {
+        return {
+          ...state,
+          deviceState: action.payload
+        };
       }
-
 
     default: {
       return state;
@@ -100,4 +113,5 @@ export const getWeightLoadingId = createSelector(
 );
 
 export const getMode = createSelector(getWeightLoadingState, (state: WeightLoadingState) => state.weightLoadingMode);
-
+export const getDeviceActive = createSelector(getWeightLoadingState, (state: WeightLoadingState) => state.deviceActive);
+export const getDeviceState = createSelector(getWeightLoadingState, (state: WeightLoadingState) => state.deviceState);

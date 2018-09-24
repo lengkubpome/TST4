@@ -34,6 +34,8 @@ export class InfoProductComponent implements OnInit {
     // show product change log
     this.store.select(fromApp.getProductLog).subscribe((log: ProductChangeLog[]) => {
       this.productLog = log.filter(l => l.product === this.data && l.state !== 'Deleted');
+      console.log(log);
+
     });
 
     // เช็ครายชื่อสินค้าในกรณีเปลี่ยนแปลงชื่อที่จะไม่ซ้ำกัน
@@ -53,6 +55,7 @@ export class InfoProductComponent implements OnInit {
       ],
       price: [{ value: this.data.price, disabled: true }, Validators.required]
     });
+
 
     // check product is changed
     this.infoProductForm.valueChanges
@@ -103,7 +106,7 @@ export class InfoProductComponent implements OnInit {
     this.infoProductForm.get('price').disable();
   }
 
-  onEditedProduct() {
+  onSaveEditProduct() {
     const productChange = { id: this.data.id, ...this.infoProductForm.value };
 
     this.productService.editProduct(this.data, productChange);

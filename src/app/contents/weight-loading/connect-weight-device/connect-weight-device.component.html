@@ -5,181 +5,249 @@
     <p>การชั่งน้ำหนัก</p>
   </div>
   <mat-card>
-    <mat-card-content>
+    <mat-card-content fxLayout="row" fxLayoutAlign="between center">
       <div fxFlex fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
         <p class="subtitle">รูปแบบ:</p>
         <mat-radio-group [(ngModel)]="weightLoadingMode" (change)="onChangeWeightLoadingMode()" fxLayoutGap="20px">
-          <mat-radio-button value="auto">Auto</mat-radio-button>
+          <mat-radio-button [disabled]="deviceState.state==='block_access'" value="auto">Auto</mat-radio-button>
           <mat-radio-button value="manual">Manual</mat-radio-button>
         </mat-radio-group>
+      </div>
+      <div>
+        <!-- xx -->
       </div>
     </mat-card-content>
   </mat-card>
 
-  <form [formGroup]="deviceSettingForm">
-    <div fxFlex fxLayout="column" *ngIf="weightLoadingMode==='auto'" style="margin: 20px 0">
+  <!-- <form [formGroup]="deviceSettingForm" *ngIf="weightLoadingMode==='auto'"> -->
+  <div *ngIf="weightLoadingMode==='auto'">
+    <div fxFlex fxLayout="column" style="margin: 20px 0">
       <div class="header" fxLayout="row" fxLayoutAlign="space-between center">
         <p>อุปกรณ์</p>
-        <button mat-icon-button type="button" color="primary" *ngIf="!editDevice" (click)="onEditDevice()">
-          <mat-icon>settings</mat-icon>
+        <button mat-button type="button" color="primary" [disabled]="addDevice || editDevice || editDeviceConfig"  (click)="onAddDevice()">
+          <mat-icon>add</mat-icon> เพิ่มอุปกรณ์
         </button>
       </div>
 
       <mat-card>
+        <form [formGroup]="deviceConnectionForm" *ngIf="!addDevice" >
+          <!-- Connection -->
+          <mat-card-content>
 
-        <mat-card-content>
-          <div class="title" fxFlex fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="20px">
-            <p>Connection</p>
-          </div>
+            <div class="title" fxFlex fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="20px">
+              <p>Connection</p>
 
-          <div fxFlex fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
-            <p class="subtitle">Model:</p>
-            <mat-form-field appearance="fill" fxFlex>
-              <mat-select formControlName="model">
-                <mat-option [value]="device.model">{{device.model}}</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-
-          <div fxFlex fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
-            <p class="subtitle">Mode:</p>
-            <mat-form-field appearance="fill" fxFlex>
-              <mat-select formControlName="device_mode">
-                <mat-option [value]="'local'">Local</mat-option>
-              </mat-select>
-            </mat-form-field>
-
-          </div>
-
-          <div fxFlex fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
-            <p class="subtitle">Mac Address:</p>
-            <mat-form-field appearance="fill" fxFlex>
-              <input matInput formControlName="mac_address">
-              <!-- <mat-icon matSuffix>check_circle_outline</mat-icon> -->
-            </mat-form-field>
-          </div>
-          <div fxFlex fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
-            <p class="subtitle">Status:</p>
-            <div fxLayoutGap="20px">
-              <mat-label>{{device.status}}</mat-label>
-            </div>
-
-          </div>
-        </mat-card-content>
-
-        <mat-divider></mat-divider>
-
-        <mat-card-content class="next-content">
-          <div class="title" fxFlex fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="20px">
-            <p>Serial Port Options</p>
-            <div fxLayoutAlign="center center">
-              <button mat-stroked-button color="primary" type="button" *ngIf="editDevice" (click)="onRescanPort()">
-                <mat-icon>refresh</mat-icon>
-                Re-Scan
-              </button>
-            </div>
-          </div>
-
-          <div fxFlex fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
-            <p class="subtitle">Port:</p>
-            <mat-form-field appearance="fill" fxFlex>
-              <mat-select formControlName="port">
-                <mat-option *ngFor="let port of portList" [value]="port">{{port}}</mat-option>
-              </mat-select>
-            </mat-form-field>
-
-          </div>
-          <div fxFlex fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
-            <p class="subtitle">Buadrate:</p>
-            <mat-form-field appearance="fill" fxFlex>
-              <mat-select formControlName="buad_rate">
-                <mat-option *ngFor="let option of serialPortOptions.buad_rate" [value]="option">{{option}}</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <div fxFlex fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
-            <p class="subtitle">Data Bits:</p>
-            <mat-form-field appearance="fill" fxFlex>
-              <mat-select formControlName="data_bits">
-                <mat-option *ngFor="let option of serialPortOptions.data_bits" [value]="option">{{option}}</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <div fxFlex fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
-            <p class="subtitle">Parity:</p>
-            <mat-form-field appearance="fill" fxFlex>
-              <mat-select formControlName="parity">
-                <mat-option *ngFor="let option of serialPortOptions.parity" [value]="option">{{option}}</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <div fxFlex fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
-            <p class="subtitle">Stop Bits: </p>
-            <mat-form-field appearance="fill" fxFlex>
-              <mat-select formControlName="stop_bits">
-                <mat-option *ngFor="let option of serialPortOptions.stop_bits" [value]="option">{{option}}</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-
-        </mat-card-content>
-
-
-        <mat-divider></mat-divider>
-        <mat-card-content class="next-content">
-          <div class="title" fxFlex fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="20px">
-            <p>Parsing Data</p>
-
-          </div>
-
-          <div fxFlex fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
-            <p class="subtitle">Parse Function:</p>
-            <mat-form-field appearance="fill" fxFlex>
-              <mat-select formControlName="function">
-                <mat-option [value]="device.parsing">{{device.parsing}}</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-
-          <div fxFlex fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="20px">
-            <p class="subtitle">Received: </p>
-            <div fxFlex fxLayout="column">
-              <mat-form-field appearance="outline" fxFlex>
-                <textarea matInput placeholder="Data..." matTextareaAutosize="true" matAutosizeMinRows="3"
-                  matAutosizeMaxRows="5" formControlName="receive_data"></textarea>
-              </mat-form-field>
               <div>
-                <button mat-button color="primary">
-                  <mat-icon>play_arrow</mat-icon>
-                  ทดสอบค่า
+                <button mat-icon-button type="button" *ngIf="!editDevice && !editDeviceConfig && deviceState.state!=='no_device_access'"
+                  #btnConnectionMenu [matMenuTriggerFor]="connectionMenu">
+                  <mat-icon>more_vert</mat-icon>
                 </button>
-                <button mat-button color="warn">
-                  <mat-icon>stop</mat-icon>
-                  หยุด
-                </button>
+
+                <mat-menu #connectionMenu="matMenu">
+                  <button mat-menu-item type="button" (click)="onEditDeviceConnectionForm()">
+                    <mat-icon>swap_horiz</mat-icon>
+                    <span>เปลี่ยนอุปกรณ์</span>
+                  </button>
+                  <button mat-menu-item type="button" [disabled]="deviceState.state==='reconnect' || deviceState.state==='try_connect'"
+                    (click)="onEditDeviceConfigForm()">
+                    <mat-icon>settings</mat-icon>
+                    <span>ตั้งค่าอุปกรณ์</span>
+                  </button>
+
+                </mat-menu>
+              </div>
+            </div>
+
+            <div fxFlex fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+              <p class="subtitle">Model:</p>
+              <mat-form-field appearance="fill" fxFlex>
+                <!-- <input matInput formControlName="model"> -->
+
+                <mat-select formControlName="model">
+                  <!-- <mat-option>--</mat-option> -->
+                  <mat-option *ngFor="let device of deviceList" [value]="device.id">
+                    {{device.model}}
+                    ( {{device.mac_address}} )
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div fxFlex fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+              <p class="subtitle">Mode:</p>
+              <mat-form-field appearance="fill" fxFlex>
+                <mat-select formControlName="connect_mode">
+                  <mat-option [value]="'local_network'">Local Network</mat-option>
+                  <!-- <mat-option [value]="'bluetooth'">Bluetooth</mat-option> -->
+                </mat-select>
+              </mat-form-field>
+
+            </div>
+
+            <div fxFlex fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px" *ngIf="!editDevice">
+              <p class="subtitle">Status:</p>
+              <div fxLayoutGap="20px">
+                <mat-label>{{deviceState.message}}</mat-label>
               </div>
 
             </div>
+          </mat-card-content>
+          <mat-card-actions *ngIf="editDevice">
+            <div fxFlex fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="20px" style="margin:10px 0">
+              <button mat-stroked-button color="primary" type="submit" [disabled]="!deviceConnectionForm.valid" (click)="onSaveDeviceConnectionForm()">
+                <mat-icon>save</mat-icon>
+                บันทึก
+              </button>
+              <button mat-stroked-button color="warn" type="button" (click)="onCancelDeviceConnectionForm()">
+                <mat-icon>close</mat-icon>
+                ยกเลิก
+              </button>
+            </div>
+          </mat-card-actions>
 
-          </div>
-        </mat-card-content>
-        <mat-divider *ngIf="editDevice"></mat-divider>
-        <mat-card-actions *ngIf="editDevice">
-          <div fxFlex fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="20px" style="margin:10px 0">
-            <button mat-stroked-button color="primary" type="submit" (click)="onSaveDeviceMode()">
-              <mat-icon>save</mat-icon>
-              บันทึก
-            </button>
-            <button mat-stroked-button color="warn" type="button" (click)="onCancelDeviceMode()">
-              <mat-icon>close</mat-icon>
-              ยกเลิก
-            </button>
-          </div>
-        </mat-card-actions>
+        </form>
+        <!-- END Connection -->
+        <!-- Configuration -->
+        <mat-divider *ngIf=" deviceState.state!=='reconnect' &&
+                  deviceState.state!=='try_connect' &&
+                  deviceState.state!=='no_device_access' &&
+                  !addDevice">
+        </mat-divider>
+        <form [formGroup]="deviceConfigForm"
+              *ngIf=" deviceState.state!=='reconnect' &&
+                      deviceState.state!=='try_connect' &&
+                      deviceState.state!=='no_device_access' &&
+                      !addDevice ">
+          <mat-card-content class="next-content">
+            <div class="title" fxFlex fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="20px">
+              <p>Serial Port Options</p>
+              <div fxLayoutAlign="center center">
+                <button mat-stroked-button color="primary" type="button" (click)="onRescanPort()" *ngIf="editDeviceConfig">
+                  <mat-icon>refresh</mat-icon>
+                  Re-Scan
+                </button>
+              </div>
+            </div>
 
+            <div fxFlex fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+              <p class="subtitle">Port:</p>
+              <mat-form-field appearance="fill" fxFlex>
+                <mat-select formControlName="port">
+                  <mat-option>--</mat-option>
+                  <mat-option *ngFor="let port of ports" [value]="port">{{port}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+            </div>
+            <div fxFlex fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+              <p class="subtitle">Baudrate:</p>
+              <mat-form-field appearance="fill" fxFlex>
+                <mat-select formControlName="baud_rate">
+                  <mat-option>--</mat-option>
+                  <mat-option *ngFor="let option of serialPortOptions.baud_rate" [value]="option">{{option}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div fxFlex fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+              <p class="subtitle">Data Bits:</p>
+              <mat-form-field appearance="fill" fxFlex>
+                <mat-select formControlName="data_bits">
+                  <mat-option *ngFor="let option of serialPortOptions.data_bits" [value]="option">{{option}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div fxFlex fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+              <p class="subtitle">Parity:</p>
+              <mat-form-field appearance="fill" fxFlex>
+                <mat-select formControlName="parity">
+                  <mat-option *ngFor="let option of serialPortOptions.parity" [value]="option">{{option}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div fxFlex fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+              <p class="subtitle">Stop Bits: </p>
+              <mat-form-field appearance="fill" fxFlex>
+                <mat-select formControlName="stop_bits">
+                  <mat-option *ngFor="let option of serialPortOptions.stop_bits" [value]="option">{{option}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+          </mat-card-content>
+
+          <mat-card-actions *ngIf="editDeviceConfig">
+            <div fxFlex fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="20px" style="margin:10px 0">
+              <button mat-stroked-button color="primary" type="submit" [disabled]='deviceConfigForm.invalid' (click)="onSaveDeviceConfigForm()">
+                <mat-icon>save</mat-icon>
+                บันทึก
+              </button>
+              <button mat-stroked-button color="warn" type="button" (click)="onCancelDeviceConfigForm()">
+                <mat-icon>close</mat-icon>
+                ยกเลิก
+              </button>
+            </div>
+          </mat-card-actions>
+
+
+          <mat-divider></mat-divider>
+          <mat-card-content class="next-content">
+            <div class="title" fxFlex fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="20px">
+              <p>Parsing Data</p>
+
+            </div>
+
+            <div fxFlex fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+              <p class="subtitle">Parse Function:</p>
+              <mat-form-field appearance="fill" fxFlex>
+                <input matInput formControlName="function">
+                <!-- <mat-select formControlName="function">
+                <mat-option [value]="device.parse_function">{{device.parse_function}}</mat-option>
+              </mat-select> -->
+              </mat-form-field>
+            </div>
+
+            <div fxFlex fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="20px">
+              <p class="subtitle">Received: </p>
+              <div fxFlex fxLayout="column">
+                <mat-form-field appearance="outline" fxFlex>
+                  <textarea matInput placeholder="Data..." matTextareaAutosize="true" matAutosizeMinRows="3"
+                    matAutosizeMaxRows="5" formControlName="receive_data"></textarea>
+                </mat-form-field>
+                <div>
+                  <button mat-button color="primary" (click)="onReserveData()">
+                    <mat-icon>play_arrow</mat-icon>
+                    ทดสอบค่า
+                  </button>
+                  <button mat-button color="warn" (click)="onCancelReserveData()">
+                    <mat-icon>stop</mat-icon>
+                    หยุด
+                  </button>
+                </div>
+
+              </div>
+
+            </div>
+          </mat-card-content>
+          <!-- <mat-divider *ngIf="editDeviceConfig"></mat-divider>
+          <mat-card-actions *ngIf="editDeviceConfig">
+            <div fxFlex fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="20px" style="margin:10px 0">
+              <button mat-stroked-button color="primary" type="submit" (click)="onSavelDeviceConfigForm()">
+                <mat-icon>save</mat-icon>
+                บันทึก
+              </button>
+              <button mat-stroked-button color="warn" type="button" (click)="onCancelDeviceConfigForm()">
+                <mat-icon>close</mat-icon>
+                ยกเลิก
+              </button>
+            </div>
+          </mat-card-actions> -->
+        </form>
+        <!-- END Configuration -->
+
+        <!-- Add Device -->
+        <tst-add-weight-device  *ngIf="addDevice" (addDevice)="addDevice=$event"></tst-add-weight-device>
+        <!-- END Add Device -->
       </mat-card>
     </div>
 
-  </form>
-
-  <p>You selected: {{deviceSettingForm.value| json}}</p>
+  </div>
