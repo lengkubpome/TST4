@@ -1,0 +1,36 @@
+@import '~@angular/material/theming';
+@include mat-core();
+$app-primary: mat-palette($mat-indigo);
+$app-accent : mat-palette($mat-pink, A200, A100, A400);
+$app-theme: mat-light-theme($app-primary, $app-accent);
+
+@mixin mix-app-theme($app-theme) {
+  $primary: map-get($app-theme, primary);
+  $accent: map-get($app-theme, accent);
+
+  .mat-dialog-title {
+    margin: 0;
+
+    .header {
+      background: mat-color($primary);
+      margin: -24px -24px 0 -24px;
+      padding: 12px 24px;
+      color: white;
+
+      .end {
+        margin-right: -10px;
+      }
+    }
+  }
+
+  mat-dialog-actions {
+    bottom: 0;
+  }
+
+  mat-divider {
+    margin: 0 -24px;
+  }
+}
+
+// Include the mixin
+@include mix-app-theme($app-theme);

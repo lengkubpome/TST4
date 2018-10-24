@@ -1,0 +1,45 @@
+ <!-- Add Device -->
+ <form [formGroup]="addDeviceForm" *ngIf="addDevice">
+    <mat-card-content>
+
+      <div class="title" fxFlex fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="20px">
+        <p>New Connection</p>
+
+      </div>
+
+      <div fxFlex fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+        <p class="subtitle">Model:</p>
+        <mat-form-field appearance="fill" fxFlex>
+          <input matInput formControlName="model" placeholder="ค้นหา mac address อุปกรณ์">
+          <!-- <mat-icon matSuffix>sentiment_very_satisfied</mat-icon> -->
+          <!-- <mat-spinner [diameter]="24" matSuffix></mat-spinner> -->
+        </mat-form-field>
+
+      </div>
+
+      <div fxFlex fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+        <p class="subtitle">Mode:</p>
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-select formControlName="connect_mode">
+            <mat-option [value]="'local_network'">Local Network</mat-option>
+            <!-- <mat-option [value]="'bluetooth'">Bluetooth</mat-option> -->
+          </mat-select>
+        </mat-form-field>
+
+      </div>
+
+    </mat-card-content>
+    <mat-card-actions>
+      <div fxFlex fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="20px" style="margin:10px 0">
+        <button mat-stroked-button color="primary" type="submit">
+          <mat-icon>save</mat-icon>
+          บันทึก
+        </button>
+        <button mat-stroked-button color="warn" type="button" (click)="onCancelAddDevice()">
+          <mat-icon>close</mat-icon>
+          ยกเลิก
+        </button>
+      </div>
+    </mat-card-actions>
+  </form>
+  <!-- END Add Device -->

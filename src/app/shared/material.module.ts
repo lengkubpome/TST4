@@ -1,4 +1,6 @@
 import { NgModule } from '@angular/core';
+import {CdkTableModule} from '@angular/cdk/table';
+import {CdkTreeModule} from '@angular/cdk/tree';
 import {
   MatButtonModule,
   MatIconModule,
@@ -27,10 +29,18 @@ import {
   MatButtonToggleModule,
   MatBadgeModule,
   MatBottomSheetModule,
+  MatTooltipModule,
+  MatProgressBarModule,
+  MatChipsModule,
+  MatTreeModule,
+  MatSlideToggleModule,
+  MatRadioModule
 } from '@angular/material';
 
 @NgModule({
   imports: [
+    CdkTableModule,
+    CdkTreeModule,
     MatButtonModule,
     MatIconModule,
     MatInputModule,
@@ -54,13 +64,20 @@ import {
     MatDividerModule,
     MatMenuModule,
     MatAutocompleteModule,
-    MatSelectModule,
     MatExpansionModule,
     MatBadgeModule,
     MatBottomSheetModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatTooltipModule,
+    MatProgressBarModule,
+    MatChipsModule,
+    MatTreeModule,
+    MatSlideToggleModule,
+    MatRadioModule,
   ],
   exports: [
+    CdkTableModule,
+    CdkTreeModule,
     MatButtonModule,
     MatIconModule,
     MatInputModule,
@@ -84,11 +101,16 @@ import {
     MatDividerModule,
     MatMenuModule,
     MatAutocompleteModule,
-    MatSelectModule,
     MatExpansionModule,
     MatBadgeModule,
     MatBottomSheetModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatTooltipModule,
+    MatProgressBarModule,
+    MatChipsModule,
+    MatTreeModule,
+    MatSlideToggleModule,
+    MatRadioModule
   ]
 })
 export class MaterialModule { }

@@ -1,0 +1,31 @@
+<mat-dialog-content>
+  <div fxFlex fxLayout="column" *ngIf="isAccess">
+    <p>
+      คุณแน่ใจที่จะลบสินค้า <strong class="hightlight">{{data.name}}</strong> หรือไม่?
+    </p>
+  </div>
+
+  <div class="alert-delete" *ngIf="!isAccess">
+    <div fxLayout="row" fxLayoutAlign="start center" style="font-size: 1.2em;">
+      <mat-icon>warning</mat-icon>
+      <span style="margin-left:1em">ไม่สามารถลบสินค้าได้</span>
+    </div>
+    <div style="padding-top: 10px">
+      <li *ngIf="data.active">เนื่องจากสินค้ายังคงใช้งาน</li>
+    <!-- <li>เนื่องจากคุณไม่มีสิทธิ์ในการลบข้อมูล</li> -->
+    <!-- <li>เนื่องจากมีสินค้าคลังสินค้า</li> -->
+    </div>
+
+
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div fxFlex fxLayout="row" fxLayoutAlign="space-between center" *ngIf="isAccess">
+    <button mat-button color="warn" [mat-dialog-close]="true">ลบ</button>
+    <button mat-button [mat-dialog-close]="false" cdkFocusInitial>ยกเลิก</button>
+  </div>
+  <div fxFlex fxLayout="row" fxLayoutAlign="end center" *ngIf="!isAccess">
+    <button mat-button color="warn" [mat-dialog-close]="false" cdkFocusInitial>ยกเลิก</button>
+  </div>
+
+</mat-dialog-actions>

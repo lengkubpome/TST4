@@ -1,0 +1,131 @@
+<form [formGroup]="infoProductForm" >
+  <div mat-dialog-title fxlayout="column ">
+    <div class="header " fxlayout="row " fxLayoutAlign="space-between center ">
+      <div>
+        <span>ข้อมูลสินค้า</span>
+      </div>
+
+      <div class="end " fxLayoutGap="10px ">
+
+        <button mat-icon-button type="button" [matMenuTriggerFor]="modeMenu" *ngIf="mode===null">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+
+        <mat-menu #modeMenu="matMenu">
+          <button mat-menu-item (click)="onEditMode()">
+            <mat-icon>edit</mat-icon> แก้ไขข้อมูล</button>
+          <button mat-menu-item (click)="onDeleteMode()">
+            <mat-icon>delete</mat-icon> ลบข้อมูล</button>
+        </mat-menu>
+
+      </div>
+    </div>
+  </div>
+
+
+  <mat-dialog-content fxLayout="column">
+    <div fxLayout="row" fxLayoutAlign="space-between center" style="margin: 20px 0 10px 0" fxLayoutGap="20px">
+
+      <div fxFlex="70" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+        <mat-label fxFlex="35">รหัส : </mat-label>
+        <mat-form-field fxFlex="65">
+          <input matInput type="text" formControlName="id">
+        </mat-form-field>
+      </div>
+      <div fxFlex style="text-align: right">
+        <!-- <mat-slide-toggle formControlName="active"
+          #tooltip="matTooltip"
+          matTooltip="กำลังใช้งาน"
+          matTooltipPosition="above"
+          [matTooltipDisabled]="canDelete||mode!=='delete'"
+          > -->
+        <mat-slide-toggle formControlName="active">
+          <strong class="active" *ngIf="infoProductForm.get('active').value">ปกติ</strong>
+          <strong class="inactive" *ngIf="!infoProductForm.get('active').value">ยกเลิก</strong>
+        </mat-slide-toggle>
+      </div>
+
+
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+      <mat-label fxFlex="20">สินค้า : </mat-label>
+      <mat-form-field fxFlex>
+        <input matInput type="text" trim="blur" formControlName="name">
+        <mat-error *ngIf="infoProductForm.get('name').hasError('required')">กรุณาใส่ชื่อสินค้า</mat-error>
+        <mat-error *ngIf="infoProductForm.get('name').hasError('forbiddenProduct')">ชื่อสินค้าซ้ำ</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+      <mat-label fxFlex="20">ราคา : </mat-label>
+      <mat-form-field fxFlex>
+        <input matInput type="number" formControlName="price" step="0.1">
+      </mat-form-field>
+    </div>
+
+    <mat-label>รายการเปลี่ยนแปลง</mat-label>
+    <div class="log">
+      <mat-accordion displayMode="flat">
+
+        <mat-expansion-panel *ngFor="let log of productLog">
+          <mat-expansion-panel-header collapsedHeight="3em" expandedHeight="4em">
+            <mat-panel-title>
+              {{log.id| date:'yyyy-MM-dd HH:mm:ss'}}
+            </mat-panel-title>
+            <mat-panel-description>
+              -- {{log.recorder}}
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <li *ngIf="log.state==='Added'">
+            <strong>สินค้าถูกเพิ่ม</strong>
+          </li>
+
+          <li *ngIf="log.state==='Edited' && log.from.name!==log.changed.name">เปลี่ยนชื่อ {{log.from.name}} =>
+            <strong>{{log.changed.name}}</strong>
+          </li>
+          <li *ngIf="log.state==='Edited' && log.from.price!==log.changed.price">เปลี่ยนราคา {{log.from.price}} =>
+            <strong>{{log.changed.price}}</strong>
+          </li>
+          <li *ngIf="log.state==='Edited' && log.from.active!==log.changed.active">เปลี่ยนสถานะสินค้า {{log.from.active?'ปกติ':'ยกเลิก'}} =>
+            <strong>{{log.changed.active?'ปกติ':'ยกเลิก'}}</strong>
+          </li>
+
+        </mat-expansion-panel>
+
+      </mat-accordion>
+    </div>
+
+    <!-- <div class="alert-delete" *ngIf="!canDelete&&mode==='delete'" >
+      ไม่สามารถลบสินค้าได้
+      <li (mouseenter)="tooltip.show()">เนื่องจากสินค้ายังคงใช้งาน</li>
+      <li>เนื่องจากมีสินค้าคลังสินค้า</li>
+    </div> -->
+
+
+  </mat-dialog-content>
+  <mat-divider></mat-divider>
+  <mat-dialog-actions fxLayout="row">
+
+    <!-- <button mat-raised-button
+      type="button" color="warn"
+      *ngIf="mode==='delete'"
+      [disabled]="!canDelete"
+      (click)="onDeleteProduct()"> -->
+
+    <button mat-raised-button type="submit" class="save" color="primary"
+      (click)="onSaveEditProduct()"
+      [disabled]="!infoProductForm.valid||infoProductForm.pristine||!canEdit"
+      *ngIf="mode==='edit'">บันทึกข้อมูล</button>
+
+
+    <div fxFlex fxLayout fxLayoutAlign="flex-end" fxLayoutGap="10px">
+      <button mat-button type="button" color="primary" *ngIf="mode!==null" (click)="onNormalMode()" cdkFocusInitial>ยกเลิก</button>
+      <button mat-button type="button" [mat-dialog-close]="false" color="primary" *ngIf="mode===null" cdkFocusInitial>ปิด</button>
+
+    </div>
+
+  </mat-dialog-actions>
+</form>
+
+

@@ -1,0 +1,43 @@
+<form [formGroup]="cutWeightForm" (ngSubmit)="onSubmit()">
+  <div class="cut-weight-list" fxLayout="column" fxLayoutGap="10px">
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+      <h4 fxLayout="row">
+        <mat-icon color="warn">report</mat-icon>
+        &nbsp;
+        <mat-label>รายการหักสิ่งเจือปน</mat-label>
+      </h4>
+      <button mat-icon-button type="button" color="primary" *ngIf="editMode" (click)="onDelete()">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+    <div class="cut-weight-edit" fxLayout="column">
+      <div fxLayout="row">
+        <mat-form-field fxFlex="60%">
+          <input matInput type="text" placeholder="ปริมาณ" formControlName="value" cdkFocusInitial>
+          <mat-error>ใส่น้ำหนักไม่ถูกต้อง</mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="40%">
+          <mat-select formControlName="unitType">
+            <mat-option value="kg">กิโลกรัม</mat-option>
+            <mat-option value="%">เปอร์เซ็นต์</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="space-between end">
+        <mat-form-field fxFlex>
+          <input matInput type="text" placeholder="หมายเหตุ" formControlName="note">
+          <mat-error>กรุณาใส่สาเหตุการตัดน้ำหนัก</mat-error>
+        </mat-form-field>
+
+      </div>
+
+    </div>
+    <div fxLayout="row" fxLayoutAlign="space-between end">
+      <button mat-button type="button" color="primary" *ngIf="!editMode" [disabled]="!cutWeightForm.valid" (click)="onSubmit()">บันทึก</button>
+      <button mat-button type="button" color="primary" *ngIf="editMode" [disabled]="!cutWeightForm.valid || !cutWeightForm.dirty"
+        (click)="onSubmit()">แก้ไข</button>
+      <button mat-button type="button" (click)="onClose()">ปิด</button>
+    </div>
+  </div>
+</form>

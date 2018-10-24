@@ -1,14 +1,22 @@
 import { ActionReducerMap, createFeatureSelector, createSelector } from '@ngrx/store';
 
-import * as fromUi from './shared/ui.reducer';
+import * as fromUi from './shared/store/ui.reducer';
+import * as fromProduct from './contents/product/store/product.reducer';
 
 export interface State {
   ui: fromUi.State;
+  product: fromProduct.State;
 }
 
 export const reducers: ActionReducerMap<State> = {
-  ui: fromUi.uiReducer
+  ui: fromUi.uiReducer,
+  product: fromProduct.productReducer
 };
 
-export const getUiState = createFeatureSelector<fromUi.State>('ui');
+const getUiState = createFeatureSelector<fromUi.State>('ui');
 export const getIsLoading = createSelector(getUiState, fromUi.getIsLoading);
+
+const getProductState = createFeatureSelector<fromProduct.State>('product');
+// export const getListProduct = createSelector(getProductState, (state: fromProduct.State) => state.listProduct);
+export const getListProduct = createSelector(getProductState, fromProduct.getProduct);
+export const getProductLog = createSelector(getProductState, fromProduct.getProductLog);

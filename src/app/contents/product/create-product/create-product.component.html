@@ -1,0 +1,49 @@
+<form [formGroup]="createProductForm" (ngSubmit)="onSubmit()">
+  <div mat-dialog-title fxlayout="column ">
+    <div class="header " fxlayout="row " fxLayoutAlign="space-between center ">
+      <div>
+        <span>เพิ่มสินค้า</span>
+      </div>
+
+      <div class="end " fxLayoutGap="10px ">
+
+      </div>
+    </div>
+  </div>
+
+
+  <mat-dialog-content fxLayout="column">
+<br>
+    <!-- <div fxLayout="row"> -->
+<!-- <mat-form-field fxFlex>
+      <input matInput type="text" placeholder="ชื่อสินค้า" cdkFocusInitial formControlName="name">
+      <mat-error *ngIf="createProductForm.get('name').hasError('required')" >กรุณาใส่ชื่อสินค้า</mat-error>
+      <mat-error *ngIf="createProductForm.get('name').hasError('forbiddenProduct')" >ชื่อสินค้าซ้ำ</mat-error>
+    </mat-form-field> -->
+
+    <mat-form-field appearance="outline">
+        <mat-label>ชื่อสินค้า</mat-label>
+        <input matInput type="text" trim="blur" placeholder="" cdkFocusInitial formControlName="name">
+        <mat-error *ngIf="createProductForm.get('name').hasError('required')" >กรุณาใส่ชื่อสินค้า</mat-error>
+        <mat-error *ngIf="createProductForm.get('name').hasError('forbiddenProduct')" >ชื่อสินค้าซ้ำ</mat-error>
+        <!-- <mat-icon matSuffix>sentiment_very_satisfied</mat-icon> -->
+      </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>ราคา (บาท)</mat-label>
+        <input matInput type="number" placeholder="" step="0.01"formControlName="price">
+      </mat-form-field>
+
+
+  </mat-dialog-content>
+  <mat-divider></mat-divider>
+  <mat-dialog-actions fxLayout="row">
+
+    <button mat-button type="button" [mat-dialog-close]="false" color="error">ยกเลิก</button>
+
+    <div fxFlex fxLayout fxLayoutAlign="flex-end" fxLayoutGap="10px">
+      <button mat-raised-button type="submit" class="save" color="primary" cdkFocusInitial [disabled]="!createProductForm.valid">บันทึกข้อมูล</button>
+    </div>
+
+  </mat-dialog-actions>
+</form>

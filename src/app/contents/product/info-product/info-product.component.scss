@@ -1,0 +1,73 @@
+@import '~@angular/material/theming';
+@include mat-core();
+$app-primary: mat-palette($mat-indigo);
+$app-accent: mat-palette($mat-pink, A200, A100, A400);
+$app-theme: mat-light-theme($app-primary, $app-accent);
+
+@mixin mix-app-theme($app-theme) {
+  $primary: map-get($app-theme, primary);
+  $accent: map-get($app-theme, accent);
+
+  .mat-dialog-title {
+    margin: 0;
+
+    .header {
+      background: mat-color($primary);
+      height: 64px;
+      margin: -24px -24px 0 -24px;
+      padding: 12px 24px;
+      color: white;
+
+      .end {
+        margin-right: -10px;
+      }
+    }
+  }
+
+  mat-dialog-actions {
+    bottom: 0;
+  }
+
+  mat-divider {
+    margin: 0 -24px;
+  }
+
+  .mat-slide-toggle {
+    .active {
+      color: mat-color($primary);
+    }
+
+    .inactive {
+      color: #f44336;
+    }
+  }
+
+  .log {
+    border: 0.5px solid;
+    padding: 1px;
+    margin: 10px 0;
+    height: 200px;
+    overflow: auto;
+  }
+
+  .mat-expansion-panel {
+    .mat-expansion-panel-header {
+      font-size: 12px;
+    }
+
+    li {
+      font-size: 14px;
+    }
+  }
+  .alert-delete{
+    color: white;
+    background: #f44336;
+    border-radius: 4px;
+    margin: 10px 0;
+    padding: 12px 20px;
+  }
+
+}
+
+// Include the mixin
+@include mix-app-theme($app-theme);
