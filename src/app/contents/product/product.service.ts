@@ -11,7 +11,7 @@ export class ProductService {
   constructor(private store: Store<fromApp.State>) {}
 
   fetchListProduct() {
-    // this.store.dispatch(new prodcutAction.SetListProduct(Dummy_Product));
+    this.store.dispatch(new prodcutAction.SetListProduct(Dummy_Product));
     //TODO: get Log Product
   }
 

@@ -1,3 +1,5 @@
+
+
 <div fxLayout="column">
   <mat-toolbar>
     <div fxFlex fxLayout="row" fxLayoutAlign="start center">
@@ -47,6 +49,9 @@
   </mat-toolbar>
 
   <div class="content">
+    <!-- <div class="blocker" *ngIf="isLoading" >
+        <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+    </div> -->
     <router-outlet></router-outlet>
 
   </div>

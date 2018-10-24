@@ -3,48 +3,111 @@
 $app-primary: mat-palette($mat-indigo);
 $app-accent: mat-palette($mat-pink, A200, A100, A400);
 $app-theme: mat-light-theme($app-primary, $app-accent);
+
 @mixin mix-app-theme($app-theme) {
   $primary: map-get($app-theme, primary);
   $accent: map-get($app-theme, accent);
+
   .mat-dialog-title {
     margin: 0;
+
     .header {
       background: mat-color($primary);
       margin: -24px -24px 0 -24px;
       padding: 12px 24px;
       color: white;
+
       .end {
         margin-right: -10px;
       }
     }
+
     .sell-mode {
       background: mat-color($accent);
     }
+
     .buy-mode {
       background: mat-color($primary);
     }
   }
+
   .sell-mode {
     background: mat-color($accent);
   }
+
   .buy-mode {
     background: mat-color($primary);
   }
+
   .mat-dialog-actions {
     bottom: 0;
   }
+
   .mat-divider.bottom {
     margin: 0 -24px;
   }
+
   .input-right {
     font-size: 24px;
     text-align: right;
     color: mat-color($primary);
   }
+
   .mat-form-field-appearance-fill .mat-form-field-flex {
     border-radius: 4px;
     padding: 0.75em 0.75em 0 0.75em;
   }
+
+  .fiell-additional {
+    margin: 1em 0 0 0;
+  }
+
+
+  .weight-time {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0;
+    margin: 1.2em 0 2em 0;
+    font-size: smaller;
+    .space {
+      width: 10px;
+    }
+    > div.item {
+      border-radius: 4px;
+      padding: 0.6em 2em;
+      -webkit-transition: 0.3s;
+      transition: 0.3s;
+      width: 40%;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: space-between;
+      > label {
+        font-weight: bold;
+        color: white;
+      }
+      > span {
+        text-align: end;
+        color: white;
+      }
+      > span.now {
+        // color: mat-color($primary);
+        color: white;
+      }
+    }
+    >div.sell-mode{
+      background: mat-color($accent);
+    }
+    >div.buy-mode{
+      background: mat-color($primary);
+    }
+  }
+
+
   .weight-field {
     display: flex;
     flex-direction: row;
@@ -56,13 +119,16 @@ $app-theme: mat-light-theme($app-primary, $app-accent);
     margin: 0.3em 0;
     -webkit-transition: 0.3s;
     transition: 0.3s;
+
     &:hover {
       background: rgba(0, 0, 0, 0.05);
     }
+
     label {
       display: block;
       width: 200px;
     }
+
     input {
       width: 100%;
       font-size: 24px;
@@ -72,27 +138,40 @@ $app-theme: mat-light-theme($app-primary, $app-accent);
       outline: none;
     }
   }
+
+  .manual {
+    .mat-icon {
+      color: mat-color($accent);
+    }
+  }
+
   .weight-field-focus {
     color: mat-color($primary);
+
     input {
       color: mat-color($primary);
     }
   }
+
   .weight-field-alert {
     color: #f44336;
+
     input {
       color: #f44336;
     }
   }
+
   .weight-field-bold {
     font-weight: bold; // border: 2px solid #3f51b5;
+
     input {
       font-weight: bold;
     }
   }
+
   .amount-field {
     font-weight: bold;
-    color: mat-color($primary);
+    // color: mat-color($primary);
     border: 2px solid mat-color($primary);
     background: rgba(0, 17, 255, 0.05);
     display: flex;
@@ -105,10 +184,12 @@ $app-theme: mat-light-theme($app-primary, $app-accent);
     margin: 0.3em 0 1em 0;
     -webkit-transition: 0.3s;
     transition: 0.3s;
+
     label {
       display: block;
       width: 200px;
     }
+
     input {
       width: 100%;
       font-size: 24px;
@@ -116,9 +197,10 @@ $app-theme: mat-light-theme($app-primary, $app-accent);
       border: 0;
       background: rgba(0, 0, 0, 0);
       outline: none;
-      color: mat-color($primary);
+      // color: mat-color($primary);
       font-weight: bold;
     }
+
     &:hover {
       background: rgba(0, 17, 255, 0.05);
       border-radius: 4px;
@@ -135,17 +217,18 @@ $app-theme: mat-light-theme($app-primary, $app-accent);
     // padding: 1em;
     -webkit-transition: 0.3s;
     transition: 0.3s;
+
     &:hover {
       background: rgba(255, 0, 0, 0.25);
       cursor: pointer;
     }
   }
 
-
   .mat-button-toggle-checked.buy {
     background-color: mat-color($primary);
     color: mat-color($primary, default-contrast);
   }
+
   .mat-button-toggle-checked.sell {
     background-color: mat-color($accent);
     color: mat-color($accent, default-contrast);

@@ -4,6 +4,7 @@ export interface Product {
   price: number;
   active: boolean;
 }
+
 export interface ProductChangeLog {
   id: Date;
   product: Product;

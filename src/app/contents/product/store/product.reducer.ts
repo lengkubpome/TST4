@@ -10,7 +10,7 @@ export interface State {
 const initialState: State = {
   // listProduct: []
   productLog: [],
-  listProduct: Dummy_Product
+  listProduct: []
 };
 
 export function productReducer(state = initialState, action: _action.ProductAction) {

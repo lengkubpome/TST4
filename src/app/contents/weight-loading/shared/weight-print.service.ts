@@ -68,7 +68,7 @@ export class WeightPrintService {
   constructor() {}
 
   printBillWeight(weighting: Weighting): void {
-    this.billNumber = weighting.id;
+    this.billNumber = weighting.bill_number;
     this.billType = weighting.type;
     this.car = weighting.car;
     this.vendorName = weighting.vendor;
@@ -124,8 +124,8 @@ export class WeightPrintService {
       }
     };
 
-    pdfMake.createPdf(docDefinition).open();
-    // pdfMake.createPdf(docDefinition).print();
+    // pdfMake.createPdf(docDefinition).open();
+    pdfMake.createPdf(docDefinition).print();
   }
 
   contentBillWeightHeader(billHeaderType: string) {

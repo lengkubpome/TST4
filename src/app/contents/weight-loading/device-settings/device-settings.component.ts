@@ -1,40 +1,43 @@
-import { DeviceService } from './../shared/device.service';
-import { Device, Serial_Port_Options, SerialPortOptions } from './../shared/device.model';
+import { DeviceService } from '../shared/device.service';
+import { Device, Serial_Port_Options, SerialPortOptions } from '../shared/device.model';
 import { Store } from '@ngrx/store';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-
-import * as fromWeightLoading from '../store/weight-loading.reducer';
-import * as weightLoadingAction from '../store/weight-loading.actions';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
+import * as fromWeightLoading from '../store/weight-loading.reducer';
+import * as weightLoadingAction from '../store/weight-loading.actions';
+
+import { Parse_Functions } from '../shared/device-parsing';
+
 @Component({
-  selector: 'tst-connect-weight-device',
-  templateUrl: './connect-weight-device.component.html',
-  styleUrls: ['./connect-weight-device.component.scss']
+  selector: 'tst-device-settings',
+  templateUrl: './device-settings.component.html',
+  styleUrls: ['./device-settings.component.scss']
 })
-export class ConnectWeightDeviceComponent implements OnInit, OnDestroy {
+export class DeviceSettingsComponent implements OnInit, OnDestroy {
   deviceConnectionForm: FormGroup;
   deviceConfigForm: FormGroup;
 
-  weightLoadingMode: string;
+  weightLoadingMode: 'auto' | 'manual';
 
   deviceList: Device[];
   serialPortOptions: SerialPortOptions = Serial_Port_Options;
   ports: string[] = [];
+  parseFunctions = Parse_Functions;
 
   deviceActive: Device;
   deviceState: { state: string; message: string };
+  deviceDataState: string;
 
   addDevice = false;
   editDevice = false;
   editDeviceConfig = false;
 
-  resource: any = null;
-
   modeSubscribtion: Subscription = new Subscription();
   deviceActiveSubscribtion: Subscription = new Subscription();
+  deviceDataSubscribtion: Subscription = new Subscription();
   stateSubscribtion: Subscription = new Subscription();
 
   constructor(
@@ -43,7 +46,7 @@ export class ConnectWeightDeviceComponent implements OnInit, OnDestroy {
     private fb: FormBuilder
   ) {
     this.deviceConnectionForm = this.fb.group({
-      model: [{ value: '', disabled: true }, Validators.required],
+      machine_model: [{ value: '', disabled: true }, Validators.required],
       connect_mode: [{ value: '', disabled: true }]
     });
 
@@ -53,7 +56,8 @@ export class ConnectWeightDeviceComponent implements OnInit, OnDestroy {
       data_bits: [{ value: '', disabled: true }, Validators.required],
       parity: [{ value: '', disabled: true }, Validators.required],
       stop_bits: [{ value: '', disabled: true }, Validators.required],
-      function: [{ value: '', disabled: true }],
+      client_limit: [{ value: '', disabled: true }, Validators.required],
+      parse_function: [{ value: '', disabled: true }, Validators.required],
       receive_data: [{ value: '', disabled: true }]
     });
 
@@ -68,32 +72,52 @@ export class ConnectWeightDeviceComponent implements OnInit, OnDestroy {
       .pipe(distinctUntilChanged())
       .subscribe(state => {
         this.deviceState = state;
-        console.log(state);
+        // console.log(state);
       });
 
     // follow mode
-    this.modeSubscribtion = this.store.select(fromWeightLoading.getMode).subscribe(mode => {
+    this.modeSubscribtion = this.store.select(fromWeightLoading.getMode).subscribe((mode: 'auto' | 'manual') => {
       this.weightLoadingMode = mode;
-      console.log('Mode action');
+      // console.log('Mode action');
 
       if (mode === 'auto') {
         this.deviceActiveSubscribtion = this.store.select(fromWeightLoading.getDeviceActive).subscribe(deviceActive => {
+
           // get device list
-          this.deviceList = this.deviceService.getDeviceList();
+          this.deviceService
+            .getDeviceList()
+            .then(snapshot => {
+              this.deviceList = [];
+              snapshot.forEach(doc => {
+                const data = { id: doc.id, ...doc.data() };
+                this.deviceList = [...this.deviceList, data];
+              });
+            })
+            .catch(err => {
+              console.log('Error getting device list', err);
+            });
+
+          // ล้างต่าการ subscribe ก่อนที่เริ่มรับใหม่
+          this.deviceDataSubscribtion.unsubscribe();
           // เช็คกรณีไม่มีการตั้งค่าอุปกรณ์ไว้
           if (deviceActive !== null) {
             this.deviceActive = deviceActive;
 
             this.setDeviceConnectionForm(deviceActive);
-
             // follow data from device
-            this.deviceService.getData().subscribe(res => {
-              if (res.state === 'using') {
-                this.resource = this.resource + '\n' + res.data;
-                this.deviceConfigForm.get('receive_data').setValue(this.resource);
-                // console.log(this.resource);
-              }
-            });
+            this.deviceDataSubscribtion = this.store
+              .select(fromWeightLoading.getDeviceData)
+              .pipe(distinctUntilChanged())
+              .subscribe(res => {
+                this.deviceDataState = res.state;
+                if (res.state === 'using') {
+                  this.deviceConfigForm.get('receive_data').setValue(JSON.stringify(res.data));
+                } else if (res.state === 'inactive') {
+                  this.deviceConfigForm.get('receive_data').setValue('Ready');
+                } else {
+                  this.deviceConfigForm.get('receive_data').setValue('Someone is using');
+                }
+              });
           } else {
             // จัดการเรื่องไม่มีอุปกรณ์
             this.resetDeviceConnectionForm();
@@ -109,21 +133,25 @@ export class ConnectWeightDeviceComponent implements OnInit, OnDestroy {
   }
 
   onChangeWeightLoadingMode() {
-    this.deviceService.changeWeightLoadingMode(this.weightLoadingMode);
+    this.deviceService.updateDatabaseWeightLoadingMode(this.weightLoadingMode);
   }
 
   ngOnDestroy() {
     this.modeSubscribtion.unsubscribe();
     this.deviceActiveSubscribtion.unsubscribe();
     this.stateSubscribtion.unsubscribe();
-    console.log('Component Destroy');
+    this.deviceDataSubscribtion.unsubscribe();
+    // ยกเลิกการทดสอบค่า
+    if (this.weightLoadingMode === 'auto') {
+      this.deviceService.cancelReserveData();
+    }
   }
 
   // ==== Device Connection ====
   setDeviceConnectionForm(device: Device) {
     if (device !== undefined) {
-      this.deviceConnectionForm.get('model').setValue(device.id);
-      this.deviceConnectionForm.get('connect_mode').setValue(device.connect_mode);
+      this.deviceConnectionForm.get('machine_model').setValue(device.id);
+      this.deviceConnectionForm.get('connect_mode').setValue('local_network');
 
       // add serialport list
       this.deviceService.getPortList().subscribe(port => {
@@ -138,10 +166,10 @@ export class ConnectWeightDeviceComponent implements OnInit, OnDestroy {
   }
 
   resetDeviceConnectionForm() {
-    this.deviceConnectionForm.get('model').setValue('');
+    this.deviceConnectionForm.get('machine_model').setValue('');
     this.deviceConnectionForm.get('connect_mode').setValue('');
 
-    this.deviceConnectionForm.get('model').disable();
+    this.deviceConnectionForm.get('machine_model').disable();
     this.deviceConnectionForm.get('connect_mode').disable();
 
     this.editDevice = false;
@@ -149,33 +177,33 @@ export class ConnectWeightDeviceComponent implements OnInit, OnDestroy {
 
   onEditDeviceConnectionForm() {
     this.editDevice = true;
-    this.deviceConnectionForm.get('model').enable();
+    this.deviceConnectionForm.get('machine_model').enable();
     // this.deviceSettingForm.get('connect_mode').enable();
   }
 
   onSaveDeviceConnectionForm() {
-    const id = this.deviceConnectionForm.get('model').value;
+    const id = this.deviceConnectionForm.get('machine_model').value;
     // กรณีไม่มีค่า deviceActive
     if (this.deviceActive !== undefined) {
       // ตรวจเช็คค่าไม่เปลี่ยนแปลง
       if (this.deviceActive.id !== id) {
-        this.deviceService.changeDeviceActive(id);
+        this.deviceService.updateDeviceActive(id);
       } else {
         // คืนค่าเดิม
         this.setDeviceConnectionForm(this.deviceActive);
       }
     } else {
-      this.deviceService.changeDeviceActive(id);
+      this.deviceService.updateDeviceActive(id);
     }
 
-    this.deviceConnectionForm.get('model').disable();
+    this.deviceConnectionForm.get('machine_model').disable();
     this.deviceConnectionForm.get('connect_mode').disable();
     this.editDevice = false;
   }
 
   onCancelDeviceConnectionForm() {
     this.setDeviceConnectionForm(this.deviceActive);
-    this.deviceConnectionForm.get('model').disable();
+    this.deviceConnectionForm.get('machine_model').disable();
     this.deviceConnectionForm.get('connect_mode').disable();
     this.editDevice = false;
   }
@@ -184,14 +212,16 @@ export class ConnectWeightDeviceComponent implements OnInit, OnDestroy {
 
   //===== Config Serial Port ========
   setDeviceConfigForm(device: Device) {
-    if (device.serial_port !== undefined) {
-      this.deviceConfigForm.get('port').setValue(device.serial_port.port);
-      this.deviceConfigForm.get('baud_rate').setValue(device.serial_port.baud_rate);
-      this.deviceConfigForm.get('data_bits').setValue(device.serial_port.data_bits);
-      this.deviceConfigForm.get('parity').setValue(device.serial_port.parity);
-      this.deviceConfigForm.get('stop_bits').setValue(device.serial_port.stop_bits);
-      // function
-      this.deviceConfigForm.get('function').setValue(device.parse_function);
+    const settings = device.connection_settings.local_network;
+    if (settings.serial_port_settings !== undefined) {
+      this.deviceConfigForm.get('port').setValue(settings.serial_port_settings.port);
+      this.deviceConfigForm.get('baud_rate').setValue(settings.serial_port_settings.baud_rate);
+      this.deviceConfigForm.get('data_bits').setValue(settings.serial_port_settings.data_bits);
+      this.deviceConfigForm.get('parity').setValue(settings.serial_port_settings.parity);
+      this.deviceConfigForm.get('stop_bits').setValue(settings.serial_port_settings.stop_bits);
+      // settings
+      this.deviceConfigForm.get('client_limit').setValue(settings.client_limit);
+      this.deviceConfigForm.get('parse_function').setValue(settings.parse_function);
     } else {
       this.resetDeviceConfigForm();
     }
@@ -204,14 +234,17 @@ export class ConnectWeightDeviceComponent implements OnInit, OnDestroy {
     this.deviceConfigForm.get('parity').setValue('');
     this.deviceConfigForm.get('stop_bits').setValue('');
     this.deviceConfigForm.get('stop_bits').setValue('');
+    this.deviceConfigForm.get('client_limit').setValue('');
+    this.deviceConfigForm.get('parse_function').setValue('');
+    // this.deviceConfigForm.get('receive_data').setValue('');
 
     this.deviceConfigForm.get('port').disable();
     this.deviceConfigForm.get('baud_rate').disable();
     this.deviceConfigForm.get('data_bits').disable();
     this.deviceConfigForm.get('parity').disable();
     this.deviceConfigForm.get('stop_bits').disable();
-    this.deviceConfigForm.get('stop_bits').disable();
-    this.deviceConfigForm.get('function').disable();
+    this.deviceConfigForm.get('client_limit').disable();
+    this.deviceConfigForm.get('parse_function').disable();
 
     this.editDeviceConfig = false;
   }
@@ -225,8 +258,8 @@ export class ConnectWeightDeviceComponent implements OnInit, OnDestroy {
     this.deviceConfigForm.get('data_bits').enable();
     this.deviceConfigForm.get('parity').enable();
     this.deviceConfigForm.get('stop_bits').enable();
-    this.deviceConfigForm.get('stop_bits').enable();
-    this.deviceConfigForm.get('function').enable();
+    this.deviceConfigForm.get('client_limit').enable();
+    this.deviceConfigForm.get('parse_function').enable();
 
     this.editDeviceConfig = true;
   }
@@ -236,8 +269,8 @@ export class ConnectWeightDeviceComponent implements OnInit, OnDestroy {
     this.deviceConfigForm.get('data_bits').disable();
     this.deviceConfigForm.get('parity').disable();
     this.deviceConfigForm.get('stop_bits').disable();
-    this.deviceConfigForm.get('stop_bits').disable();
-    this.deviceConfigForm.get('function').disable();
+    this.deviceConfigForm.get('client_limit').disable();
+    this.deviceConfigForm.get('parse_function').disable();
     this.deviceConfigForm.reset();
     this.editDeviceConfig = false;
 
@@ -250,7 +283,8 @@ export class ConnectWeightDeviceComponent implements OnInit, OnDestroy {
     this.deviceConfigForm.get('data_bits').disable();
     this.deviceConfigForm.get('parity').disable();
     this.deviceConfigForm.get('stop_bits').disable();
-    this.deviceConfigForm.get('function').disable();
+    this.deviceConfigForm.get('client_limit').disable();
+    this.deviceConfigForm.get('parse_function').disable();
 
     const port = this.deviceConfigForm.get('port').value;
     const option: SerialPortOptions = {
@@ -259,11 +293,13 @@ export class ConnectWeightDeviceComponent implements OnInit, OnDestroy {
       parity: this.deviceConfigForm.get('parity').value,
       stop_bits: this.deviceConfigForm.get('stop_bits').value
     };
+    const serialport = { port, option };
+    const clientLimit = this.deviceConfigForm.get('client_limit').value;
+    const parseFunction = this.deviceConfigForm.get('parse_function').value;
 
-    this.deviceService.SaveDeviceConfig(this.deviceActive, { port, option });
+    this.deviceService.saveDeviceConfig(this.deviceActive, serialport, clientLimit, parseFunction);
     // กรณีบันทึกข้อมูลเสร็จสมบูรณ์
     this.editDeviceConfig = false;
-    // this.setDeviceConfigForm(this.deviceActive);
   }
 
   onAddDevice() {

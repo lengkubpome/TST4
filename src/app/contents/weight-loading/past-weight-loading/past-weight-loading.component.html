@@ -36,19 +36,19 @@
     </div>
   </div>
 
-  <mat-table [dataSource]="dataSource" matSort *ngIf="finishedWeightLoadingList.length>0">
+  <mat-table [dataSource]="dataSource" matSort *ngIf="listWeightOut.length>0">
 
     <ng-container matColumnDef="car">
       <mat-header-cell *matHeaderCellDef mat-sort-header fxLayoutAlign="center center"> ทะเบียนรถ </mat-header-cell>
-      <mat-cell *matCellDef="let element" fxLayoutAlign="center center"> {{element.car}} </mat-cell>
+      <mat-cell *matCellDef="let element" fxLayoutAlign="center center" [ngClass]="{'buy': element.type ==='buy', 'sell': element.type ==='sell'}"> {{element.car}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="dateLoadIn">
       <mat-header-cell *matHeaderCellDef  mat-sort-header fxLayoutAlign="start center"> ช่วงเวลารถเข้า - ออก </mat-header-cell>
-      <mat-cell *matCellDef="let element" fxLayoutAlign="start center">
-        <div fxLayout="column" fxLayoutAlign="center center">
-          <span>{{element.dateLoadIn | date}}</span>
-        <span>{{element.dateLoadIn | date:"HH:mm"}} - {{element.dateLoadOut | date:"HH:mm"}} </span>
+      <mat-cell *matCellDef="let element" fxLayoutAlign="start center" [ngClass]="{'buy': element.type ==='buy', 'sell': element.type ==='sell'}">
+        <div fxLayout="column" fxLayoutAlign="start start">
+          <span>{{element.dateLoadIn.toDate() | momentPipe:'Do/M/YYYY'  }}</span>
+        <span> {{element.dateLoadOut.toDate() | momentPipe:'Do/M/YYYY'}} </span>
         </div>
 
     </mat-cell>
@@ -56,17 +56,17 @@
 
     <ng-container matColumnDef="product">
       <mat-header-cell *matHeaderCellDef mat-sort-header fxLayoutAlign="center center"> สินค้า </mat-header-cell>
-      <mat-cell *matCellDef="let element" fxLayoutAlign="center center" > {{element.product}} </mat-cell>
+      <mat-cell *matCellDef="let element" fxLayoutAlign="center center" [ngClass]="{'buy': element.type ==='buy', 'sell': element.type ==='sell'}"> {{element.product}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="weightIn">
       <mat-header-cell *matHeaderCellDef fxHide.xs fxLayoutAlign="space-evenly center"> น้ำหนักเข้า </mat-header-cell>
-      <mat-cell *matCellDef="let element" fxHide.xs fxLayoutAlign="space-evenly center"> {{element.weightIn | number}} </mat-cell>
+      <mat-cell *matCellDef="let element" fxHide.xs fxLayoutAlign="space-evenly center" [ngClass]="{'buy': element.type ==='buy', 'sell': element.type ==='sell'}"> {{element.weightIn | number}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="weightOut">
       <mat-header-cell *matHeaderCellDef fxHide.xs fxLayoutAlign="space-evenly center"> น้ำหนักออก </mat-header-cell>
-      <mat-cell *matCellDef="let element" fxHide.xs fxLayoutAlign="space-evenly center"> {{element.weightOut | number}} </mat-cell>
+      <mat-cell *matCellDef="let element" fxHide.xs fxLayoutAlign="space-evenly center" [ngClass]="{'buy': element.type ==='buy', 'sell': element.type ==='sell'}"> {{element.weightOut | number}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="type">
@@ -80,6 +80,6 @@
     ></mat-row>
   </mat-table>
 
-  <div *ngIf="finishedWeightLoadingList.length === 0">ไม่มีข้อมูลชั่งน้ำหนักเข้า</div>
+  <div *ngIf="listWeightOut.length === 0">ไม่มีข้อมูลชั่งน้ำหนักเข้า</div>
 
 </div>

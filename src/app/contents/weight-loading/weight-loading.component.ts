@@ -1,9 +1,10 @@
-import { ConnectWeightDeviceComponent } from './connect-weight-device/connect-weight-device.component';
 import { MatDialog } from '@angular/material';
 import { Component, OnInit } from '@angular/core';
 import * as fromWeightLoading from './store/weight-loading.reducer';
 import { Store } from '@ngrx/store';
 import { DeviceService } from './shared/device.service';
+
+import * as fromApp from '../../app.reducer';
 
 @Component({
   selector: 'tst-weight-loading',
@@ -12,12 +13,9 @@ import { DeviceService } from './shared/device.service';
 })
 export class WeightLoadingComponent implements OnInit {
   showRoute = null;
+  isLoading: boolean;
 
-  constructor(
-    private dialog: MatDialog,
-    private store: Store<fromWeightLoading.State>,
-    private deviceService: DeviceService
-  ) {
+  constructor(private store: Store<fromWeightLoading.State>, private deviceService: DeviceService) {
     this.store.select(fromWeightLoading.getRoute).subscribe(
       res => {
         // console.log(res);
@@ -25,16 +23,11 @@ export class WeightLoadingComponent implements OnInit {
       },
       error => console.log(error)
     );
+
+    store.select(fromApp.getIsLoading).subscribe(loading => {
+      this.isLoading = loading;
+    });
   }
 
   ngOnInit() {}
-
-  // onSettingDevice(){
-  //   const dialogSetting = this.dialog.open(ConnectWeightDeviceComponent,{
-  //     width: '90%',
-  //     maxWidth: '500px',
-  //     // autoFocus: true,
-  //     disableClose: false
-  //   })
-  // }
 }

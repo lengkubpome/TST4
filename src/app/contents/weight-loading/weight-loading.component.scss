@@ -13,3 +13,13 @@
 .content {
   margin: 10px 15px;
 }
+
+.blocker{
+  margin: -10px -15px;
+  width: 100%;
+  position: fixed;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.4);
+  z-index: 99;
+
+}

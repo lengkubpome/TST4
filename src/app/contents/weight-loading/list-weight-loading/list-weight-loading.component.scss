@@ -1,4 +1,22 @@
+.header {
+  padding: 0 16px;
+
+  p {
+    font-size: 18px;
+    font-weight: bold;
+  }
+}
+
 mat-row:hover{
     background: rgba(0, 0, 0, 0.03);
 
+}
+
+.blocker{
+  margin: -10px -15px;
+  width: 100%;
+  position: fixed;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.4);
+  z-index: 99;
 }

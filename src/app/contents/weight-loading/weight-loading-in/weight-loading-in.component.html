@@ -1,16 +1,14 @@
 <section>
-  <form [formGroup]="weightLoadingInForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="weightLoadingInForm" (ngSubmit)="onSubmit()">
 
     <div mat-dialog-title fxlayout="column">
-      <div class="header"
-        [ngClass]="{'sell-mode':btnGroup.value === 'sell'}"
-        fxlayout="row" fxLayoutAlign="space-between center">
+      <div class="header" [ngClass]="{'sell-mode':btnGroup.value === 'sell'}" fxlayout="row" fxLayoutAlign="space-between center">
         <div>
           <span>ชั่งรถเข้า</span>
         </div>
 
         <div class="end" fxLayoutGap="10px">
-        <!--   <button mat-icon-button type="button" class="note">
+          <!--   <button mat-icon-button type="button" class="note">
             <mat-icon [matBadge]="notes.length" matBadgeColor="warn" [matBadgeHidden]="notes.length === 0" (click)="onShowNoteDetail()">note</mat-icon>
 
           </button>
@@ -38,12 +36,12 @@
             <input matInput type="text" placeholder="ทะเบียนรถ" cdkFocusInitial formControlName="car">
             <mat-error>กรุณาใส่ทะเบียนรถ</mat-error>
           </mat-form-field>
-          <mat-form-field fxFlex *ngIf="this.weightLoadingInForm.get('type').value === 'buy'" >
-              <input matInput type="text" placeholder="ผู้ซื้อ" formControlName="vendor">
-            </mat-form-field>
-            <mat-form-field fxFlex *ngIf="this.weightLoadingInForm.get('type').value === 'sell'">
-              <input matInput type="text" placeholder="ลูกค้า" formControlName="customer">
-            </mat-form-field>
+          <mat-form-field fxFlex *ngIf="this.weightLoadingInForm.get('type').value === 'buy'">
+            <input matInput type="text" placeholder="ผู้ซื้อ" formControlName="vendor">
+          </mat-form-field>
+          <mat-form-field fxFlex *ngIf="this.weightLoadingInForm.get('type').value === 'sell'">
+            <input matInput type="text" placeholder="ลูกค้า" formControlName="customer">
+          </mat-form-field>
         </div>
 
 
@@ -58,7 +56,7 @@
             <mat-error>กรุณาเลือกรายการสินค้า</mat-error>
           </mat-form-field>
 
-          <mat-form-field fxFlex="50%" >
+          <mat-form-field fxFlex="50%">
             <input matInput type="number" placeholder="ราคา" step="0.01" formControlName="price">
             <mat-error *ngIf="weightLoadingInForm.get('price').errors">
               Price is
@@ -81,21 +79,35 @@
         </div>
 
         <h4>ข้อมูลน้ำหนัก (หน่วย: กิโลกรัม)</h4>
-        <div class="weight-field weight-field-focus">
+        <div class="weight-field weight-field-focus" *ngIf="weightingMode==='auto'">
           <label>น้ำหนักเข้า</label>
           <input type="number" formControlName="weightIn">
+        </div>
+
+        <div class="weight-field manual weight-field-focus" matTooltip="ใส่ข้อมูลน้ำหนักด้วยมือ" matTooltipPosition="above"
+          *ngIf="weightingMode==='manual'">
+          <label><span matBadge="!" matBadgeOverlap="false" matBadgeColor="accent">น้ำหนักเข้า</span></label>
+          <input type="number" formControlName="weightInManual">
         </div>
 
       </div>
     </mat-dialog-content>
     <mat-divider></mat-divider>
-    <mat-dialog-actions fxLayout="row">
+    <mat-dialog-actions fxLayout="row" *ngIf="!formLoading">
+
 
       <button mat-button type="button" [mat-dialog-close]="false" color="error">ยกเลิก</button>
 
       <div fxFlex fxLayout fxLayoutAlign="flex-end" fxLayoutGap="10px">
-        <button mat-raised-button type="submit" class="save" color="primary" [ngClass]="{'sell-mode':btnGroup.value === 'sell'}" cdkFocusInitial [disabled]="!weightLoadingInForm.valid">บันทึกข้อมูล</button>
+        <button mat-raised-button type="submit" class="save" color="primary" [ngClass]="{'sell-mode':btnGroup.value === 'sell'}"
+          cdkFocusInitial [disabled]="!weightLoadingInForm.valid || !weightData.stable">บันทึกข้อมูล</button>
       </div>
+    </mat-dialog-actions>
+
+    <!-- UI Loading -->
+    <mat-dialog-actions fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px" *ngIf="formLoading">
+        <mat-spinner diameter="24"></mat-spinner>
+      <span>กำลังบันทึกข้อมูล...</span>
 
     </mat-dialog-actions>
   </form>

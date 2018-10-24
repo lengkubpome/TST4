@@ -3,9 +3,8 @@ import { MatSort, MatTableDataSource } from '@angular/material';
 import { Store } from '@ngrx/store';
 import * as weightLoadingAction from '../store/weight-loading.actions';
 import * as fromWeightLoading from '../store/weight-loading.reducer';
-import { WeightLoadingService } from '../weight-loading.service';
+import { WeightLoadingService } from '../shared/weight-loading.service';
 import { Weighting } from '../../../shared/models/weighting.model';
-
 
 @Component({
   selector: 'tst-past-weight-loading',
@@ -13,32 +12,26 @@ import { Weighting } from '../../../shared/models/weighting.model';
   styleUrls: ['./past-weight-loading.component.scss']
 })
 export class PastWeightLoadingComponent implements OnInit, AfterViewInit {
-
   showSearchField = false;
   viewSelected = 'ทั้งหมด';
 
-  finishedWeightLoadingList: Weighting[] = [];
+  listWeightOut: Weighting[] = [];
 
   displayedColumns = ['dateLoadIn', 'car', 'product', 'weightIn', 'weightOut', 'type'];
   dataSource = new MatTableDataSource<Weighting>();
 
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(
-    private store: Store<fromWeightLoading.State>,
-    private weightLoadingService: WeightLoadingService) {
-      this.store.dispatch(new weightLoadingAction.SetRoute('history'));
-     }
-
+  constructor(private store: Store<fromWeightLoading.State>, private weightLoadingService: WeightLoadingService) {
+    this.store.dispatch(new weightLoadingAction.SetRoute('history'));
+  }
 
   ngOnInit() {
-
-    this.store.select(fromWeightLoading.getListWeightLoading)
-      .subscribe((weighting: Weighting[]) => {
-        this.finishedWeightLoadingList = weighting.filter(item => item.state === 'completed');
-        this.dataSource.data = this.finishedWeightLoadingList;
-      });
-    this.weightLoadingService.fetchListWeightLoading();
+    this.store.select(fromWeightLoading.getListWeightOut).subscribe((weighting: Weighting[]) => {
+      this.dataSource.data = weighting;
+      this.listWeightOut = weighting;
+    });
+    // this.weightLoadingService.fetchListWeightOut();
   }
 
   ngAfterViewInit() {
@@ -54,25 +47,20 @@ export class PastWeightLoadingComponent implements OnInit, AfterViewInit {
     switch (select) {
       case 'all':
         this.viewSelected = 'ทั้งหมด';
-        res = this.finishedWeightLoadingList;
+        res = this.listWeightOut;
         break;
 
       case 'buy':
         this.viewSelected = 'ซื้อเข้า';
-        res = this.finishedWeightLoadingList.filter(item =>
-          item.type === select
-        );
+        res = this.listWeightOut.filter(item => item.type === select);
         break;
 
       case 'sell':
         this.viewSelected = 'ขายออก';
-        res = this.finishedWeightLoadingList.filter(item =>
-          item.type === select
-        );
+        res = this.listWeightOut.filter(item => item.type === select);
         break;
     }
 
     this.dataSource.data = res;
   }
-
 }

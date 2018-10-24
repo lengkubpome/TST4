@@ -1,32 +1,39 @@
 import { WeightPrintService } from './../shared/weight-print.service';
 import { CancelDialogComponent } from './alert-dialog.component';
-import { Component, OnInit, Inject, ViewChild } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild, OnDestroy } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog, MatSnackBar } from '@angular/material';
 
-import { Observable } from 'rxjs';
+import { Observable, Subscription, interval } from 'rxjs';
 import { startWith, map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { allowedProducts } from '../../../shared/custom-validator-fn/validator-products';
 
 import { Weighting, WeightingNote } from '../../../shared/models/weighting.model';
-import { Product, Dummy_Product } from '../../../shared/models/product.model';
+import { Product } from '../../../shared/models/product.model';
 import { CutWeightComponent } from './cut-weight/cut-weight.component';
 
-import { WeightLoadingService } from '../weight-loading.service';
+import { WeightLoadingService } from '../shared/weight-loading.service';
 
-import { Store } from '@ngrx/store';
+import { Store, compose } from '@ngrx/store';
 import * as fromApp from '../../../app.reducer';
+import * as fromWeightLoading from '../store/weight-loading.reducer';
+import { DeviceService } from '../shared/device.service';
 
 @Component({
   selector: 'tst-weight-loading-out',
   templateUrl: './weight-loading-out.component.html',
   styleUrls: ['./weight-loading-out.component.scss']
 })
-export class WeightLoadingOutComponent implements OnInit {
+export class WeightLoadingOutComponent implements OnInit, OnDestroy {
   weightLoading: Weighting;
   weightLoadingOutForm: FormGroup;
-  loadingMode = false;
+  formLoading = false;
+  weightingMode: string;
 
+  weightData: { stable: boolean; weight: number } = { stable: false, weight: 0 };
+
+  dateLoadIn: any;
+  timeNow: Date;
   price = 0;
   totalWeight = 0;
 
@@ -39,18 +46,21 @@ export class WeightLoadingOutComponent implements OnInit {
   products: Product[];
   filteredProducts: Observable<Product[]>;
 
-  @ViewChild('btnMenu') btnMenu: HTMLButtonElement;
-  // @ViewChild('btnNotes') btnNotes: HTMLButtonElement;
-  @ViewChild('btnCutWeight') btnCutWeight: HTMLButtonElement;
-  @ViewChild('btnCancel') btnCancel: HTMLButtonElement;
+  timeSubscription = new Subscription();
+  modeSubscription = new Subscription();
+
+  // Stock
+  stockList: string[] = ['สินค้าทั่วไป', 'ไม่คิดภาษี', 'ไม่ร่วมรายการ'];
 
   constructor(
-    private store: Store<fromApp.State>,
+    private store: Store<fromWeightLoading.State>,
     public dialogRef: MatDialogRef<WeightLoadingOutComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialog: MatDialog,
     private fb: FormBuilder,
     private weightLoadingService: WeightLoadingService,
+    private deviceService: DeviceService,
+    public snackBar: MatSnackBar,
     private printService: WeightPrintService
   ) {
     this.store.select(fromApp.getListProduct).subscribe((products: Product[]) => {
@@ -60,6 +70,8 @@ export class WeightLoadingOutComponent implements OnInit {
 
   ngOnInit() {
     this.weightLoading = this.data.weighting;
+    // fix error where production
+    this.dateLoadIn = this.weightLoading.dateLoadIn;
 
     this.weightLoadingOutForm = this.fb.group({
       car: [{ value: this.weightLoading.car, disabled: false }, Validators.required],
@@ -73,14 +85,46 @@ export class WeightLoadingOutComponent implements OnInit {
       type: [{ value: this.weightLoading.type, disabled: false }],
       weightIn: [{ value: this.weightLoading.weightIn, disabled: true }],
       weightOut: [{ value: 0, disabled: true }],
+      weightOutManual: [{ value: 0, disabled: false }],
       cutWeight: [{ value: 0, disabled: true }],
       totalWeight: [{ value: 0, disabled: true }],
-      amount: [{ value: 0, disabled: true }]
+      amount: [{ value: 0, disabled: true }],
+      stocks: []
+    });
+
+    // จัดการน้ำหนักจากอุปกรณ์
+    this.modeSubscription = this.store.select(fromWeightLoading.getMode).subscribe(mode => {
+      this.weightingMode = mode;
+      if (mode === 'auto') {
+        this.deviceService.reserveData();
+        this.store.select(fromWeightLoading.getDeviceData).subscribe(d => {
+          if (d.data !== null) {
+            this.weightData.stable = d.data.stable;
+            this.weightData.weight = parseFloat(d.data.integer + '.' + d.data.decimal);
+            this.weightLoadingOutForm.get('weightOut').setValue(this.weightData.weight);
+            this.calculateWeightLoading();
+          }
+        });
+
+        this.weightLoadingOutForm.get('weightOutManual').clearValidators();
+      } else if (mode === 'manual') {
+        this.weightData = { stable: true, weight: null };
+
+        const weightMax = this.weightLoadingOutForm.get('weightIn').value;
+        this.weightLoadingOutForm
+          .get('weightOutManual')
+          .setValidators(Validators.compose([Validators.required, Validators.max(weightMax), Validators.min(1)]));
+      }
+    });
+
+    // Weight Data Manual Change
+    this.weightLoadingOutForm.get('weightOutManual').valueChanges.subscribe(value => {
+      this.weightData.weight = value;
+      this.calculateWeightLoading();
     });
 
     // initial Notes
     this.weightLoading.notes !== undefined ? (this.notes = this.weightLoading.notes) : (this.notes = []);
-
     this.calculateWeightLoading();
 
     // Fillter Products
@@ -90,16 +134,18 @@ export class WeightLoadingOutComponent implements OnInit {
     );
 
     // Type Change
-    this.weightLoadingOutForm.get('type').valueChanges.subscribe(value => {
-      if (value === 'sell') {
+    this.weightLoadingOutForm.get('type').valueChanges.subscribe(v => {
+      if (v === 'sell') {
         this.showCutWeight = false;
         this.onResetCutWeight();
         this.weightLoadingOutForm.get('vendor').setValue(this.weightLoading.vendor);
         this.weightLoadingOutForm.get('price').disable();
-      } else {
+      } else if (v === 'buy' && !this.formLoading) {
         this.showCutWeight = this.showCutWeight;
         this.weightLoadingOutForm.get('customer').setValue(this.weightLoading.customer);
         this.weightLoadingOutForm.get('price').enable();
+      } else if (v === 'buy' && this.formLoading) {
+        this.weightLoadingOutForm.get('price').disable();
       }
 
       this.changePrice();
@@ -125,14 +171,18 @@ export class WeightLoadingOutComponent implements OnInit {
       )
       .subscribe(() => this.calculateWeightLoading());
 
-    // Weight Loading Out Change
-    this.weightLoadingOutForm
-      .get('weightOut')
-      .valueChanges.pipe(
-        debounceTime(400),
-        distinctUntilChanged()
-      )
-      .subscribe(() => this.calculateWeightLoading());
+    // counting time
+    this.timeSubscription = interval(1000).subscribe(() => {
+      this.timeNow = new Date(Date.now());
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.modeSubscription.unsubscribe();
+    if (this.weightingMode === 'auto') {
+      this.deviceService.cancelReserveData();
+    }
+    this.timeSubscription.unsubscribe();
   }
 
   private changePrice() {
@@ -175,14 +225,8 @@ export class WeightLoadingOutComponent implements OnInit {
     this.calculateWeightLoading();
   }
 
-  private getWeightFromDevice(): number {
-    const value = 9999; //FIXME: แก้ค่าที่ไม่ผ่าน UI
-    this.weightLoadingOutForm.get('weightOut').setValue(value);
-    return value;
-  }
-
   private calculateWeightLoading() {
-    this.weightLoading.weightOut = this.getWeightFromDevice();
+    this.weightLoading.weightOut = this.weightData.weight;
     this.weightLoading.totalWeight =
       Math.abs(this.weightLoading.weightIn - this.weightLoading.weightOut) - this.totalCutWeight;
 
@@ -208,73 +252,106 @@ export class WeightLoadingOutComponent implements OnInit {
   }
 
   onShowCutWeight(): void {
-    const dialogRef = this.dialog.open(CutWeightComponent, {
-      disableClose: false,
-      data: {
-        cutWeight: this.cutWeight
-      }
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result !== undefined) {
-        if (result === 'delete') {
-          this.onResetCutWeight();
-        } else {
-          this.cutWeight = result;
-          this.showCutWeight = true;
-          this.calculateCutWeight();
+    if (!this.formLoading) {
+      const dialogRef = this.dialog.open(CutWeightComponent, {
+        disableClose: false,
+        // width: '400px',
+        // height: '450px',
+        data: {
+          cutWeight: this.cutWeight
         }
-      }
-    });
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result !== undefined) {
+          if (result === 'delete') {
+            console.log(`%c Here`, 'color:red');
+
+            this.onResetCutWeight();
+          } else {
+            this.cutWeight = result;
+            this.showCutWeight = true;
+            this.calculateCutWeight();
+          }
+        }
+      });
+    }
   }
 
   onCancel() {
     const dialogRef = this.dialog.open(CancelDialogComponent);
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.weightLoadingService.cancelWeightLoading(this.weightLoading);
-        this.dialogRef.close();
+        this.formLoading = true;
+        this.disableForm();
+
+        this.weightLoadingService
+          .cancelWeightLoadingIn(this.weightLoading)
+          .then(() => {
+            this.snackBar.open('ข้อมูลถูกลบ', null, { duration: 2000 });
+            this.dialogRef.close();
+          })
+          .catch(error => {
+            console.log(error);
+            this.snackBar.open('เกิดข้อผิดพลาดในการลบข้อมูล', 'ปิด');
+            this.dialogRef.close();
+          });
       }
     });
   }
 
   onSubmit() {
-    const weighting: Weighting = {
-      id: this.weightLoading.id,
-      dateLoadIn: this.weightLoading.dateLoadIn,
-      dateLoadOut: new Date(Date.now()),
-      car: this.weightLoadingOutForm.get('car').value,
-      vendor: this.weightLoadingOutForm.get('vendor').value,
-      customer: this.weightLoadingOutForm.get('customer').value,
-      product: this.weightLoadingOutForm.get('product').value,
-      price: this.weightLoadingOutForm.get('price').value,
-      weightIn: this.weightLoading.weightIn,
-      weightOut: this.weightLoading.weightOut,
-      cutWeight: this.cutWeight,
-      totalWeight: this.weightLoading.totalWeight,
-      amount: this.weightLoading.amount,
-      type: this.weightLoadingOutForm.get('type').value,
-      state: 'completed',
-      notes: this.notes,
-      recorder: { weightIn: 'Recorder' }
-    };
+    if (this.weightLoadingOutForm.valid) {
+      const weighting: Weighting = {
+        bill_number: this.weightLoading.bill_number,
+        dateLoadIn: this.weightLoading.dateLoadIn,
+        dateLoadOut: new Date(Date.now()),
+        car: this.weightLoadingOutForm.get('car').value,
+        vendor: this.weightLoadingOutForm.get('vendor').value,
+        customer: this.weightLoadingOutForm.get('customer').value,
+        product: this.weightLoadingOutForm.get('product').value,
+        price: this.weightLoadingOutForm.get('price').value,
+        weightIn: this.weightLoading.weightIn,
+        weightOut: this.weightData.weight,
+        cutWeight: this.cutWeight,
+        totalWeight: this.weightLoading.totalWeight,
+        amount: this.weightLoading.amount,
+        type: this.weightLoadingOutForm.get('type').value,
+        notes: this.notes,
+        recorder: { ...this.weightLoading.recorder, weightOut: 'RecorderX' }
+      };
 
-    console.log(weighting);
+      this.disableForm();
 
-    // TODO: สร้างระบบให้เช็คว่าบันทึกข้อมูลผ่านหรือไม่
-    // this.weightLoadingService.recordWeightLoadingOut(weighting);
-    // this.printService.printBillWeight(weighting);
-    // this.dialogRef.close();
+      this.weightLoadingService
+        .saveWeightLoadingOut(weighting)
+        .then(() => {
+          this.printService.printBillWeight(weighting);
+          this.snackBar.open('เพิ่มข้อมูลสำเร็จ', null, { duration: 2000 });
+          this.dialogRef.close();
+        })
+        .catch(error => {
+          console.log(error);
+
+          this.snackBar.open('เกิดข้อผิดพลาดในการบันทึกข้อมูล', 'ปิด');
+          this.dialogRef.close();
+        });
+    }
   }
 
-  saveData() {
-    // this.btnMenu.disabled = true;
-    // this.btnCutWeight.disabled = true;
-    // this.btnCancel.disabled = true;
-    // this.weightLoadingOutForm.disable();
-    // this.loadingMode = true;
+  private disableForm() {
+    this.formLoading = true;
+
+    Object.keys(this.weightLoadingOutForm.controls).forEach(key => {
+      this.weightLoadingOutForm.get(key).disable();
+    });
   }
 
-  filterProducts(val: any): Product[] {
+  private filterProducts(val: any): Product[] {
     return this.products.filter(product => product.name.indexOf(val) > -1 || product.id.toString() === val);
+  }
+
+  onAddCustomer() {
+    console.log('xxxxx');
   }
 }

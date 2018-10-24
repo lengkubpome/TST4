@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 
 import * as fromWeightLoading from '../store/weight-loading.reducer';
 import * as weightLoadingAction from '../store/weight-loading.actions';
-import { WeightLoadingService } from '../weight-loading.service';
+import { WeightLoadingService } from '../shared/weight-loading.service';
 
 @Component({
   selector: 'tst-deleted-weight-loading',
@@ -25,11 +25,11 @@ export class DeletedWeightLoadingComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.store.select(fromWeightLoading.getListWeightLoading).subscribe((weighting: Weighting[]) => {
-      this.recentlyDeleted = weighting.filter(item => item.state === 'cancelled');
-      this.dataSource.data = this.recentlyDeleted;
+    this.store.select(fromWeightLoading.getListWeightDeleted).subscribe((weighting: Weighting[]) => {
+      this.dataSource.data = weighting;
+
     });
-    this.weightLoadingService.fetchListWeightLoading();
+    // this.weightLoadingService.fetchListWeightDeleted();
   }
 
   ngAfterViewInit() {
